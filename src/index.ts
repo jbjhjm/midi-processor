@@ -7,19 +7,29 @@ import processMidiData from './processor.js'
 const midi = await import("midifile-ts");
 const program = new Command();
 
+interface Settings {
+	save:boolean,
+	overwrite:boolean,
+}
+
 
 program
 	.argument('<string>','filepath or folder to process')
 	.option('--save', 'must be passed to actually save the modifications to file')
+	.option('--overwrite', 'overwrite files, if not passed, the original files will be retained as *.mid.bak')
 	.action(async (filepath, options) => {
 		if(!filepath) {
 			console.error('no filepath given!');
 			process.exit();
 		}
 		const pathInfo = await fs.lstat(filepath);
-		const save = options.save;
+		const settings:Settings = {
+			save:options.save||false,
+			overwrite:options.overwrite||false,
+		}
+		
 		if(pathInfo.isFile()) {
-			await processFile(filepath, save);
+			await processFile(filepath, settings);
 		} else {
 			const dirInfo = await fs.readdir(filepath);
 			const midiFilesInDir = dirInfo.filter(entry=>{
@@ -29,7 +39,7 @@ program
 			for (const fileName of midiFilesInDir) {
 				const fullPath = path.join(filepath, fileName);
 				try {
-					await processFile(fullPath, save);
+					await processFile(fullPath, settings);
 				} catch(err) {
 					console.error('failed to process file', err)
 				}
@@ -38,15 +48,19 @@ program
 	});
 
 
-async function processFile(filePath:string, saveChanges:boolean) {
+async function processFile(filePath:string, settings:Settings) {
 	console.log('Begin to process file '+filePath)
 	const buffer = await fs.readFile(filePath)
 	const midiData:MidiFile = await midi.read(buffer)
 
 	await processMidiData(midiData);
+	console.log('Completed processing of file '+filePath)
 
-	console.log('Completed file '+filePath)
-	if(saveChanges) {
+	if(settings.save) {
+		if(!settings.overwrite) {
+			fs.rename(filePath, filePath+'.bak')
+		}
+
 		const fileBuffer = await midi.write(midiData.tracks, midiData.header.ticksPerBeat);
 		await fs.writeFile(filePath, new Uint8Array(fileBuffer));
 		console.log('Updated file.')
