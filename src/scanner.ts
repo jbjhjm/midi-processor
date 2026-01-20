@@ -54,14 +54,14 @@ if(pathInfo.isFile()) {
 		}
 	}
 
-	process.stdout.write(color.green("Files without matches: \n"+filesWithoutMatchingMidi.join("\n")));
+	process.stdout.write(color.green("\n\nFiles without matches: \n"+filesWithoutMatchingMidi.join("\n")));
 	process.stdout.write(color.red("\n\nFiles with matches: \n"+filesWithMatchingMidi.join("\n")));
 	process.stdout.write(color.green("\n\nSearched for: Note(s) "+midiNotesParsed.join(' - ')+" in channel(s) "+midiChannelParsed.join(' - ')+"\n"));
 }
 
 
 async function processFile(filePath:string) {
-	console.log('Begin to process file '+filePath)
+	// console.log('Begin to process file '+filePath)
 	const buffer = await fs.readFile(filePath)
 	const midiData:MidiFile = await midi.read(buffer)
 	const track = midiData.tracks[0];
