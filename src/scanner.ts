@@ -1,11 +1,11 @@
 import { input } from '@inquirer/prompts';
 import * as fs from 'fs/promises';
-import { glob } from 'glob';
 import type { MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
 import * as path from 'path';
 // const color = require('ansi-colors');
 import color from 'ansi-colors';
 import { collectFiles, sanitizeFilePath } from './utils/files.js';
+import { inRange, isMidiNote } from './utils/matchers.js';
 const midi = await import("midifile-ts");
 
 interface Settings {
@@ -40,8 +40,7 @@ for (const fileName of await collectFiles(inputPath, globMatcher)) {
 			const midiData:MidiFile = await midi.read(buffer)
 			const track = midiData.tracks[0];
 			const hasMatches = track.some(entry=>{
-				if(entry.type !== "channel") return false;
-				if(entry.subtype !== "noteOn") return false;
+				if(!isMidiNote(entry)) return false;
 				if(!matchesChannel(entry)) return false;
 				if(!matchesNote(entry)) return false;
 				return true;
@@ -61,8 +60,7 @@ process.stdout.write(color.green("\n\nSearched for: Note(s) "+midiNotesParsed.jo
 
 function matchesChannel(entry:NoteOnEvent|NoteOffEvent) {
 	if(multiChannelMatcher) {
-		return entry.channel >= midiChannelParsed[0]-1
-			&& entry.channel <= midiChannelParsed[1]-1
+		return inRange(entry.channel, midiChannelParsed[0]-1, midiChannelParsed[1]-1)
 	} else {
 		return entry.channel === midiChannelParsed[0]-1
 	}
@@ -70,8 +68,7 @@ function matchesChannel(entry:NoteOnEvent|NoteOffEvent) {
 
 function matchesNote(entry:NoteOnEvent|NoteOffEvent) {
 	if(multiNoteMatcher) {
-		return entry.noteNumber >= midiNotesParsed[0]
-			&& entry.noteNumber <= midiNotesParsed[1]
+		return inRange(entry.noteNumber, midiNotesParsed[0], midiNotesParsed[1])
 	} else {
 		return entry.noteNumber === midiNotesParsed[0]
 	}
