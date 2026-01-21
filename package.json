@@ -2,7 +2,9 @@
 	"type": "module",
 	"scripts": {
 		"process": "tsx src/processor.ts",
-		"scanner": "tsx src/scanner.ts"
+		"migrate": "tsx src/migrate.ts",
+		"scanner": "tsx src/scanner.ts",
+		"backup": "tsx src/backup.ts"
 	},
 	"dependencies": {
 		"@inquirer/prompts": "^8.2.0",
