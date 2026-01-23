@@ -5,8 +5,9 @@ import * as path from 'path';
 // const color = require('ansi-colors');
 import color from 'ansi-colors';
 import { collectFiles, sanitizeFilePath } from './utils/files.js';
-import { inRange, isMidiNote } from './utils/matchers.js';
+import { inRange } from './utils/matchers.js';
 import { globals } from './globals.js';
+import { isMidiNote } from './utils/midi.js';
 const midi = await import("midifile-ts");
 
 interface Settings {

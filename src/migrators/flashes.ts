@@ -1,7 +1,8 @@
 import color from 'ansi-colors';
 import type { AnyEvent, MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
-import { isMidiNote, channelNoteIndex as index } from '../utils/matchers.js';
+import { channelNoteIndex as index } from '../utils/matchers.js';
 import { globals } from '../globals.js';
+import { isMidiNote } from '../utils/midi.js';
 
 const allowedChannels = [15].map(v=>v-1); // WARNING: 0-15 !!!
 type RemappingEntry = [number, number, boolean?];
@@ -46,6 +47,7 @@ function applyRemapping(track: AnyEvent[], remappings:Map<number, RemappingEntry
 			if(event.subtype==='noteOn') {
 				if(whiteActive !== useWhiteMode) {
 					const event = buildWhiteModeEvent(useWhiteMode, whiteModeChannel);
+					changes.push(event)
 					track.splice(i,0, event);
 					whiteActive = useWhiteMode;
 					i++;
