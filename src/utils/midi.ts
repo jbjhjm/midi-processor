@@ -49,13 +49,22 @@ export function insertNoteWithLength(track:AnyEvent[], event:NoteOnEvent, refInd
 
 }
 
-function insertMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>, targetIndex:number, deltaTime:number) {
+export function insertMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>, targetIndex:number, deltaTime:number) {
 	const event: ChannelEvent<any> = {
 		...eventData,
 		deltaTime: deltaTime
 	};
 	track[targetIndex + 1].deltaTime -= deltaTime;
 	track.splice(targetIndex + 1, 0, event as AnyEvent);
+}
+
+export function removeMidiEvents(track: AnyEvent[], targetIndex:number, removeCount=1) {
+	let deltaTimeSum = 0;
+	for(let i=0; i<removeCount; i++) {
+		deltaTimeSum += track[targetIndex + 1].deltaTime;
+	}
+	track.splice(targetIndex + 1, removeCount);
+	track[targetIndex + 1].deltaTime += deltaTimeSum;
 }
 
 function logDeltaTimesInRange(startPosition:number, endPosition:number, track: AnyEvent[], highlights:number[]=[]) {
@@ -136,7 +145,7 @@ function findInsertPosition(track: AnyEvent[], startIndex: number, ticks: number
 
 // ticks between mean we need to sum the deltaTime.
 // INCLUDING deltaTime at target index, IGNORING the deltaTime at start idnex.
-function getTicksBetween(track:AnyEvent[], start:number, target:number) {
+export function getTicksBetween(track:AnyEvent[], start:number, target:number) {
 	let isNegative = start > target;
 	let ticks = 0;
 	if(isNegative) {

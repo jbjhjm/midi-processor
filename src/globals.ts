@@ -5,6 +5,6 @@ export const globals = {
 		mic:5,
 	},
 	path:'F:\\Sector Live\\Projects\\Audio\\recorded',
-	glob:'**/Prodigy MIDI GrandMA.mid',
+	glob:'**/Voices MIDI GrandMA.mid',
 
 }
