@@ -5,6 +5,7 @@ import type { MidiFile } from "midifile-ts";
 import * as path from 'path';
 import color from 'ansi-colors';
 import { collectFiles, sanitizeFilePath } from './utils/files.js';
+import { globals } from './globals.js';
 
 /**
  * executes a selected midi migrator against matched midi files
@@ -12,9 +13,6 @@ import { collectFiles, sanitizeFilePath } from './utils/files.js';
 
 const midi = await import("midifile-ts");
 
-const defaults = {
-	path:'F:\\Sector Live\\Projects\\Audio\\recorded'
-}
 
 const migrators = await glob('migrators/*.ts', {cwd:path.join(process.cwd(),'src')})
 const migratorSelection = await select({ message:'Select which migration to execute', choices:migrators })
@@ -24,8 +22,8 @@ const migratorFn = await import(importPath).then(m=>m.default)
 
 const applyChanges = await input({ message: 'Apply changes? (y/n)' });
 const inputPath = sanitizeFilePath(await input({ message: 'This utility searches for Midi events within a directory. \n'
-											+'Enter custom path or press ENTER', default:defaults.path }));
-const globMatcher = await input({ message: 'You can customize the glob matcher to use.', default:'**/*GrandMA.mid' });
+											+'Enter custom path or press ENTER', default:globals.path }));
+const globMatcher = await input({ message: 'You can customize the glob matcher to use.', default:globals.glob });
 
 for (const fileName of await collectFiles(inputPath, globMatcher)) {
 	try {
@@ -36,10 +34,12 @@ for (const fileName of await collectFiles(inputPath, globMatcher)) {
 }
 
 async function processFile(relPath:string) {
+		console.log('processFile start '+relPath)
 	const fullPath = path.join(inputPath, relPath);
 	const buffer = await fs.readFile(fullPath)
-	const midiData:MidiFile = await midi.read(buffer)
+	const midiData:MidiFile = await midi.read(buffer);
 
+	if(midiData.tracks.length > 1) throw new Error('Multiple Tracks discovered, this is not supported!')
 	const modified = await migratorFn(midiData, relPath);
 
 	if(!modified) return;

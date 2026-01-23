@@ -6,6 +6,7 @@ import * as path from 'path';
 import color from 'ansi-colors';
 import { collectFiles, sanitizeFilePath } from './utils/files.js';
 import { inRange, isMidiNote } from './utils/matchers.js';
+import { globals } from './globals.js';
 const midi = await import("midifile-ts");
 
 interface Settings {
@@ -13,13 +14,10 @@ interface Settings {
 	overwrite:boolean,
 }
 
-const defaults = {
-	path:'F:\\Sector Live\\Projects\\Audio\\recorded'
-}
 
 const inputPath = sanitizeFilePath(await input({ message: 'This utility searches for Midi events within a directory. \n'
-											+'Enter custom path or press ENTER', default:defaults.path }));
-const globMatcher = await input({ message: 'You can customize the glob matcher to use.', default:'**/*GrandMA.mid' });
+											+'Enter custom path or press ENTER', default:globals.path }));
+const globMatcher = await input({ message: 'You can customize the glob matcher to use.', default:globals.glob });
 const midiChannel = await input({ message: 'Enter midi channel (1-16) to scan or x-y to search a range of channels' });
 const midiNotes = await input({ message: 'Enter midi note number (0-127) to scan or x-y to search a range of notes' });
 

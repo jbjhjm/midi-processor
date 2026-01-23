@@ -14,3 +14,4 @@ export function isMidiNote(event:AnyEvent): event is NoteOnEvent|NoteOffEvent {
 export function channelNoteIndex(channel:number, note:number) {
 	return (channel << 8) + note
 }
+

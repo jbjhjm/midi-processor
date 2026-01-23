@@ -1,6 +1,7 @@
 import color from 'ansi-colors';
 import type { MidiFile } from "midifile-ts";
 import { inRange, isMidiNote } from '../utils/matchers.js';
+import { globals } from '../globals.js';
 
 const allowedChannels = [8].map(v=>v-1); // WARNING: 0-15 !!!
 
@@ -15,7 +16,7 @@ export default async function (midi:MidiFile, file:string) {
 			// --> ch 4 @ 001
 			const index = event.noteNumber - 1;
 			event.velocity = [100,80,60,40,30,20,10,5,0][index];
-			event.channel = 3-1;  // WARNING: 0-15 !!!
+			event.channel = globals.channels.jbmh;  // WARNING: 0-15 !!!
 			event.noteNumber = 2;
 			changes.push(event);
 		}
