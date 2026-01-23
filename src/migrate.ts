@@ -30,7 +30,8 @@ for (const fileName of await collectFiles(inputPath, globMatcher)) {
 	try {
 		await processFile(fileName);
 	} catch(err) {
-		console.error('failed to process file', err)
+		process.stdout.write(color.red('failed to process file '+fileName+'\n'))
+		console.error(err)
 	}
 }
 
@@ -53,8 +54,9 @@ async function processFile(relPath:string) {
 	const initialLength = midiData.tracks.length;
 	const modified = await migratorFn(midiData, relPath);
 	if(!modified) return;
-	const diff = midiData.tracks.length - initialLength;
-	console.log(diff+' MIDI events have been added.')
+
+	// const diff = midiData.tracks.length - initialLength;
+	// console.log(diff+' MIDI events have been added.')
 
 	if(applyChanges==='y') {
 		const fileBuffer = await midi.write(midiData.tracks, midiData.header.ticksPerBeat);
