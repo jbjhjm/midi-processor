@@ -128,7 +128,7 @@ function findInsertPosition(track: AnyEvent[], startIndex: number, ticks: number
 			}
 		} else {
 			// deltaTime describes the ticks BEFORE refNote, immediately jump to the next one!
-			const nextTicks = track[index+1]?.deltaTime;
+			const nextTicks = track[index+1]?.deltaTime || 0;
 			// console.log('nestTicks at '+index+1+' = '+nextTicks)
 			if (ticksRemaining < nextTicks && index < track.length) {
 				targetIndex = index;
