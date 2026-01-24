@@ -1,6 +1,6 @@
-import { AnyEvent, NoteOffEvent, NoteOnEvent } from 'midifile-ts';
+import { AnyEvent, ChannelEvent, NoteOffEvent, NoteOnEvent } from 'midifile-ts';
 import { channelNoteIndex } from './matchers.js';
-import { isMidiNote } from './midi.js';
+import { insertMidiEvent, insertNoteWithLength, isGeneratedEvent, isMidiNote } from './midi.js';
 import color from 'ansi-colors';
 
 export type RemappingEntry<TData=any> = [number, number, TData?];
@@ -13,6 +13,9 @@ export type RemappingHandlerFn<TRemappingData,TState={}> = (
 	tools: {
 		applyRegularRemapping:()=>any,
 		addChange:(event:AnyEvent)=>void,
+		insertRelativeEvent:(event:AnyEvent|ChannelEvent<any>, offset:number)=>void,
+		insertRelativeNoteWithLength:(newEvent:AnyEvent|ChannelEvent<any>,offset:number,length:number)=>void,
+		skipNext:()=>void, // helpful when inserting events. Allows to advance the iterator index to skip entries.
 		state:TState // a storage that's persisted throughout the whole replacement process
 	}
 ) => void;
@@ -63,6 +66,7 @@ export class Remapper<TRemappingData> {
 		let i = 0;
 		while(i < track.length) {
 			const event = track[i];
+			let advanceIndex = 1;
 			// when remapping within a channel, events that are being inserted may be interpreted wrongly.
 			// ignore them to ensure they wont affect/bug the result.
 			if(isGeneratedEvent(event)) {
@@ -71,11 +75,11 @@ export class Remapper<TRemappingData> {
 			}
 			if(this.isRemappedEvent(event)) {
 				const id = channelNoteIndex(event.channel + 1, event.noteNumber);
+				const mapping = this.mappings.get(id);
+				// console.log('remapping '+(event.channel+1)+'@'+event.noteNumber+' -> '+id+' -> '+JSON.stringify(mapping))
 				const applyRegularRemapping = ()=>{
-					const [channel, note, config] = this.mappings.get(id);
-					// console.log('remapping '+event.noteNumber+' to '+note);
-					event.channel = channel - 1;
-					event.noteNumber = note;
+					event.channel = mapping[0] - 1;
+					event.noteNumber = mapping[1];
 					this.changeList.push(event);
 				}
 				if(customHandler) {
@@ -83,10 +87,21 @@ export class Remapper<TRemappingData> {
 						track,
 						event, 
 						i,
-						this.mappings.get(id),
+						mapping,
 						{
 							applyRegularRemapping,
 							addChange:(change:AnyEvent)=>{ this.changeList.push(change) },
+							skipNext:()=>{ advanceIndex++ },
+							insertRelativeEvent:(newEvent,offset)=>{
+								insertMidiEvent(track, newEvent as any, i, offset);
+								this.changeList.push(newEvent as any)
+								if(offset <= 0) advanceIndex++
+							},
+							insertRelativeNoteWithLength:(newEvent,offset,length)=>{
+								insertNoteWithLength(track, newEvent as any, i, offset,length)
+								this.changeList.push(newEvent as any, newEvent as any)
+								if(offset <= 0) advanceIndex++
+							},
 							state,
 						}
 					);
@@ -94,7 +109,7 @@ export class Remapper<TRemappingData> {
 					applyRegularRemapping()
 				}
 			}
-			i++;
+			i+=advanceIndex;
 		}
 
 		return state;
