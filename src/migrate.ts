@@ -27,6 +27,10 @@ const inputPath = sanitizeFilePath(await input({ message: 'This utility searches
 const globMatcher = await input({ message: 'You can customize the glob matcher to use.', default:globals.glob });
 
 for (const fileName of await collectFiles(inputPath, globMatcher)) {
+	if(fileName.startsWith('alt')) {
+		process.stdout.write(color.gray('ignoring "alt" file '+fileName+'\n'))
+		continue;
+	}
 	try {
 		await processFile(fileName);
 	} catch(err) {
