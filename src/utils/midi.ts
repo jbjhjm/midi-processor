@@ -56,12 +56,21 @@ export function insertMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>,
 	addMidiEvent(track, eventData, position);
 }
 
+export function markGeneratedEvent(event:AnyEvent|ChannelEvent<any>) {
+	event["__generated"] = true
+}
+
+export function isGeneratedEvent(event:AnyEvent|ChannelEvent<any>):boolean {
+	return !!event["__generated"]
+}
+
 function addMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>, pos:InsertPositionInfo) {
 	
 	const event: ChannelEvent<any> = {
 		...eventData,
-		deltaTime: pos.ticksAfterTarget
+		deltaTime: pos.ticksAfterTarget,
 	};
+	markGeneratedEvent(event)
 	if(pos.prepend) {
 		event.deltaTime = 0;
 		track.unshift(event as AnyEvent);

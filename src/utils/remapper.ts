@@ -63,6 +63,12 @@ export class Remapper<TRemappingData> {
 		let i = 0;
 		while(i < track.length) {
 			const event = track[i];
+			// when remapping within a channel, events that are being inserted may be interpreted wrongly.
+			// ignore them to ensure they wont affect/bug the result.
+			if(isGeneratedEvent(event)) {
+				i++;
+				continue;
+			}
 			if(this.isRemappedEvent(event)) {
 				const id = channelNoteIndex(event.channel + 1, event.noteNumber);
 				const applyRegularRemapping = ()=>{
