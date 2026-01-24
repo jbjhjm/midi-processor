@@ -6,6 +6,10 @@ import { Remapper } from '../utils/remapper.js';
 export default async function (midi:MidiFile, file:string) {
 
 	const mapper = new Remapper(13);
+
+	// jbmh blackout
+	mapper.remap(10, globals.channels.jbmh, 13);
+
 	// positions 1
 	mapper.batchRemap({
 		fromRange:[76, 89], 
