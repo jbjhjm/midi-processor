@@ -1,8 +1,17 @@
-import type { AnyEvent, MidiFile } from "midifile-ts";
+import type { AnyEvent, ChannelEvent, MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
 import { insertMidiEvent } from '../utils/midi.js';
 import { Remapper, RemappingHandlerFn } from '../utils/remapper.js';
+import ansiColors from 'ansi-colors';
 
 type RemappingData = {page:number};
+interface UsedPageOriginInfo {pageTrigger:number,event:NoteOnEvent|NoteOffEvent,mapping:any}
+type RemappingState = {
+	pageSelectionEvent?:ChannelEvent<any>,
+	currentTrackIndex?:number,
+	file:string,
+	usedPages:UsedPageOriginInfo[],
+}
+
 
 export default async function (midi:MidiFile, file:string) {
 	const targetChannel = 1;
@@ -10,7 +19,7 @@ export default async function (midi:MidiFile, file:string) {
 
 	// main cue triggers with page mapping attached
 	mapper.remap(4	, targetChannel, 11, {page:35});	//MAS Main
-	mapper.remap(11	, targetChannel, 11, {page:36});	//2k Main
+	// mapper.remap(11	, targetChannel, 11, {page:36});	//2k Main
 	mapper.remap(12	, targetChannel, 12, {page:36});	//2k Short Main
 	mapper.remap(17	, targetChannel, 11, {page:37});	//Digivoo Main
 	mapper.remap(24	, targetChannel, 11, {page:38});	//MOL Main
@@ -66,44 +75,65 @@ export default async function (midi:MidiFile, file:string) {
 	mapperCh2.remap(1, targetChannel, 12, {page:32});	//Fake 1 rndm blue
 	mapperCh2.remap(2, targetChannel, 13, {page:32});	//Fake 2 ss slow
 	mapperCh2.remap(3, targetChannel, 14, {page:32});	//Fake 3 ss rndm (von wrong way)
-
-	function buildPageTriggerEvent(pageNoteNumber: number): AnyEvent {
-		return {
-			deltaTime: 0,
-			type: 'channel',
-			subtype: 'noteOn' ,
-			channel: 1-1, // 0-15!
-			noteNumber: pageNoteNumber,
-			velocity: 127,
-		};
-	}
 	
 	const track = midi.tracks[0];
-	let pageSelectionEvent = null;
-	let currentTrackIndex:number;
-	
-	const handler:RemappingHandlerFn<RemappingData> = (event,index,mapping,tools)=>{
-		const [channel, note, config] = mapping;
-		const pageTrigger = config?.page;
-		tools.applyRegularRemapping();
-		currentTrackIndex = index;
-		// we ignore noteOff events and only trigger white mode on and off based on what is being triggered.
-		// this allows for easy manual refinement later.
-		if(pageTrigger && !pageSelectionEvent && event.subtype==='noteOn') {
-			pageSelectionEvent = buildPageTriggerEvent(pageTrigger);
-			insertMidiEvent(track, pageSelectionEvent, index, -900)
-			tools.addChange(pageSelectionEvent)
+
+	let state: RemappingState;
+	state = mapper.apply<RemappingState>(track, handler, {file, usedPages:[]})
+	state = mapperCh2.apply<RemappingState>(track, handler, state)
+	finalize(track,state)
+
+	const usedPages = state.usedPages.reduce((unique, page)=>{ 
+		if(!unique.find(p=>p.pageTrigger===page.pageTrigger)) {
+			unique.push(page)
 		}
-	}
+		return unique;
+	},[] as UsedPageOriginInfo[]);
 
-	mapper.apply(track, handler)
-	mapperCh2.apply(track, handler)
-
-	// insert end of page trigger
-	if(pageSelectionEvent) {
-		const endEvent = { ...pageSelectionEvent, subtype:'noteOff' };
-		insertMidiEvent(track, endEvent, currentTrackIndex, 0)
+	if(usedPages.length > 1) {
+		process.stdout.write(ansiColors.yellow(`warning: ${file} tried to use multiple song pages: \n `))
+		console.log(usedPages.map(info=>{
+			return `Page ${info.pageTrigger} requested by event Ch ${info.event.channel+1}, Note ${info.event.noteNumber}`
+		}))
 	}
 
 	return mapper.reportChanges(file) || mapperCh2.reportChanges(file)
+}
+
+const handler:RemappingHandlerFn<RemappingData, RemappingState> = (track,event,index,mapping,tools)=>{
+	const config = mapping[2];
+	const s = tools.state;
+	const pageTrigger = config?.page;
+	// we ignore noteOff events and only trigger white mode on and off based on what is being triggered.
+	// this allows for easy manual refinement later.
+	// order is important! execute before regular remapping so that the original event can be captured.
+	if(pageTrigger && event.subtype==='noteOn') {
+		s.usedPages.push({pageTrigger,event:{...event},mapping})
+		if(!s.pageSelectionEvent) {
+			// console.log('buildPageTriggerEvent for '+pageTrigger)
+			s.pageSelectionEvent = buildPageTriggerEvent(pageTrigger);
+			tools.insertRelativeEvent(s.pageSelectionEvent, -900)
+		}
+	}
+	tools.applyRegularRemapping();
+	s.currentTrackIndex = index;
+}
+
+function finalize(track:AnyEvent[], state:RemappingState) {
+	// insert end of page trigger
+	if(state.pageSelectionEvent) {
+		const endEvent = { ...state.pageSelectionEvent, subtype:'noteOff' };
+		insertMidiEvent(track, endEvent, state.currentTrackIndex, 0)
+	}
+}
+
+function buildPageTriggerEvent(pageNoteNumber: number): NoteOnEvent {
+	return {
+		deltaTime: 0,
+		type: 'channel',
+		subtype: 'noteOn' ,
+		channel: 1-1, // 0-15!
+		noteNumber: pageNoteNumber,
+		velocity: 127,
+	};
 }
