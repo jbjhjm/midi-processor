@@ -4,19 +4,13 @@ import { Remapper } from '../utils/remapper.js';
 
 
 export default async function (midi:MidiFile, file:string) {
-	const mapper = new Remapper(16);
+	const mapper = new Remapper(15);
 
-	// sun pixels 4 * 10
+	// fog
 	mapper.batchRemap({
-		fromOffset:[1, 40], 
-		target:{channel:globals.channels.suns, start:41}, 
+		fromRange:[110, 114], 
+		target:{channel:globals.channels.sfx, start:11}, 
 	})
-	// mic pixels
-	mapper.batchRemap({
-		fromOffset:[41, 16], 
-		target:{channel:globals.channels.mic, start:41}, 
-	})
-
 	mapper.apply(midi.tracks[0])
 
 	return mapper.reportChanges(file)

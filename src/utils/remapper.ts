@@ -1,11 +1,13 @@
 import { AnyEvent, NoteOffEvent, NoteOnEvent } from 'midifile-ts';
 import { channelNoteIndex } from './matchers.js';
 import { isMidiNote } from './midi.js';
+import color from 'ansi-colors';
 
 export type RemappingEntry<TData=any> = [number, number, TData?];
 
 export type RemappingHandlerFn<TRemappingData> = (
-	event: AnyEvent, 
+	event: NoteOnEvent|NoteOffEvent, 
+	index: number,
 	mapping: RemappingEntry<TRemappingData>,
 	tools: {
 		applyRegularRemapping:()=>any,
@@ -67,6 +69,7 @@ export class Remapper<TRemappingData> {
 				if(customHandler) {
 					customHandler(
 						event, 
+						i,
 						this.mappings.get(id),
 						{
 							applyRegularRemapping,
@@ -97,6 +100,16 @@ export class Remapper<TRemappingData> {
 		if(this.srcChannel !== event.channel+1) return false;
 		const id = channelNoteIndex(event.channel+1, event.noteNumber);
 		return this.mappings.has(id)
+	}
+
+	reportChanges(file:string):boolean {
+		if(this.changeList.length > 0) {
+			process.stdout.write(color.green('Updated '+this.changeList.length/2+' MIDI notes in file '+file+'\n'))
+			return true;
+		} else {
+			process.stdout.write(color.gray('No changes in file '+file+'\n'))
+			return false;
+		}
 	}
 }
 

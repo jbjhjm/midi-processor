@@ -85,62 +85,63 @@ function isRemappedEvent(event:AnyEvent, remappings:Map<number, RemappingEntry>)
 
 const remappingSuns = new Map<number, RemappingEntry>()
 let targetChannel = globals.channels.suns
-// sun fadeout
-remappingSuns.set(index(15,0), [targetChannel,24])
-remappingSuns.set(index(15,1), [targetChannel,25])
-remappingSuns.set(index(15,2), [targetChannel,26])
-remappingSuns.set(index(15,3), [targetChannel,27])
+const baseIndex = 16;
 // sun fadein
-remappingSuns.set(index(15,15), [targetChannel,16])
-remappingSuns.set(index(15,16), [targetChannel,17])
-remappingSuns.set(index(15,17), [targetChannel,18])
-remappingSuns.set(index(15,18), [targetChannel,19])
+remappingSuns.set(index(15,15), [targetChannel,baseIndex])
+remappingSuns.set(index(15,16), [targetChannel,baseIndex+1])
+remappingSuns.set(index(15,17), [targetChannel,baseIndex+2])
+remappingSuns.set(index(15,18), [targetChannel,baseIndex+3])
 // sun flash
-remappingSuns.set(index(15,75), [targetChannel,20])
-remappingSuns.set(index(15,76), [targetChannel,21])
-remappingSuns.set(index(15,77), [targetChannel,22])
-remappingSuns.set(index(15,78), [targetChannel,23])
+remappingSuns.set(index(15,75), [targetChannel,baseIndex+4])
+remappingSuns.set(index(15,76), [targetChannel,baseIndex+5])
+remappingSuns.set(index(15,77), [targetChannel,baseIndex+6])
+remappingSuns.set(index(15,78), [targetChannel,baseIndex+7])
+// sun fadeout
+remappingSuns.set(index(15,0), [targetChannel,baseIndex+8])
+remappingSuns.set(index(15,1), [targetChannel,baseIndex+9])
+remappingSuns.set(index(15,2), [targetChannel,baseIndex+10])
+remappingSuns.set(index(15,3), [targetChannel,baseIndex+11])
 
 
 const remappingMic = new Map<number, RemappingEntry>()
 targetChannel = globals.channels.mic
-// mic fadeout
-remappingMic.set(index(15,4), [targetChannel,24])
-remappingMic.set(index(15,9), [targetChannel,24,true]) // white
 // mic fadein
-remappingMic.set(index(15,19), [targetChannel,16])
-remappingMic.set(index(15,24), [targetChannel,16,true]) // white
+remappingMic.set(index(15,19), [targetChannel,baseIndex])
+remappingMic.set(index(15,24), [targetChannel,baseIndex,true]) // white
 // mic flash
-remappingMic.set(index(15,29), [targetChannel,20])
-remappingMic.set(index(15,84), [targetChannel,20,true]) // white
+remappingMic.set(index(15,29), [targetChannel,baseIndex+4])
+remappingMic.set(index(15,84), [targetChannel,baseIndex+4,true]) // white
+// mic fadeout
+remappingMic.set(index(15,4), [targetChannel,baseIndex+8])
+remappingMic.set(index(15,9), [targetChannel,baseIndex+8,true]) // white
 
 
 const remappingJBMH = new Map<number, RemappingEntry>()
 targetChannel = globals.channels.jbmh
-// jbmh fadeout
-remappingJBMH.set(index(15,5), [targetChannel,24])
-remappingJBMH.set(index(15,6), [targetChannel,25])
-remappingJBMH.set(index(15,7), [targetChannel,26])
-remappingJBMH.set(index(15,8), [targetChannel,27])
-remappingJBMH.set(index(15,10), [targetChannel,24,true]) // white
-remappingJBMH.set(index(15,11), [targetChannel,25,true]) // white
-remappingJBMH.set(index(15,12), [targetChannel,26,true]) // white
-remappingJBMH.set(index(15,13), [targetChannel,27,true]) // white
 // jbmh fadein
-remappingJBMH.set(index(15,20), [targetChannel,16])
-remappingJBMH.set(index(15,21), [targetChannel,17])
-remappingJBMH.set(index(15,22), [targetChannel,18])
-remappingJBMH.set(index(15,23), [targetChannel,19])
-remappingJBMH.set(index(15,25), [targetChannel,16,true]) // white
-remappingJBMH.set(index(15,26), [targetChannel,17,true]) // white
-remappingJBMH.set(index(15,27), [targetChannel,18,true]) // white
-remappingJBMH.set(index(15,28), [targetChannel,19,true]) // white
+remappingJBMH.set(index(15,20), [targetChannel,baseIndex])
+remappingJBMH.set(index(15,21), [targetChannel,baseIndex+1])
+remappingJBMH.set(index(15,22), [targetChannel,baseIndex+2])
+remappingJBMH.set(index(15,23), [targetChannel,baseIndex+3])
+remappingJBMH.set(index(15,25), [targetChannel,baseIndex,true]) // white
+remappingJBMH.set(index(15,26), [targetChannel,baseIndex+1,true]) // white
+remappingJBMH.set(index(15,27), [targetChannel,baseIndex+2,true]) // white
+remappingJBMH.set(index(15,28), [targetChannel,baseIndex+3,true]) // white
 // jbmh flash
-remappingJBMH.set(index(15,80), [targetChannel,20])
-remappingJBMH.set(index(15,81), [targetChannel,21])
-remappingJBMH.set(index(15,82), [targetChannel,22])
-remappingJBMH.set(index(15,83), [targetChannel,23])
-remappingJBMH.set(index(15,85), [targetChannel,20,true]) // white
-remappingJBMH.set(index(15,86), [targetChannel,21,true]) // white
-remappingJBMH.set(index(15,87), [targetChannel,22,true]) // white
-remappingJBMH.set(index(15,88), [targetChannel,23,true]) // white
+remappingJBMH.set(index(15,80), [targetChannel,baseIndex+4])
+remappingJBMH.set(index(15,81), [targetChannel,baseIndex+1+5])
+remappingJBMH.set(index(15,82), [targetChannel,baseIndex+6])
+remappingJBMH.set(index(15,83), [targetChannel,baseIndex+7])
+remappingJBMH.set(index(15,85), [targetChannel,baseIndex+4,true]) // white
+remappingJBMH.set(index(15,86), [targetChannel,baseIndex+1+5,true]) // white
+remappingJBMH.set(index(15,87), [targetChannel,baseIndex+6,true]) // white
+remappingJBMH.set(index(15,88), [targetChannel,baseIndex+7,true]) // white
+// jbmh fadeout
+remappingJBMH.set(index(15,5), [targetChannel,baseIndex+8])
+remappingJBMH.set(index(15,6), [targetChannel,baseIndex+9])
+remappingJBMH.set(index(15,7), [targetChannel,baseIndex+10])
+remappingJBMH.set(index(15,8), [targetChannel,baseIndex+11])
+remappingJBMH.set(index(15,10), [targetChannel,baseIndex+8,true]) // white
+remappingJBMH.set(index(15,11), [targetChannel,baseIndex+9,true]) // white
+remappingJBMH.set(index(15,12), [targetChannel,baseIndex+10,true]) // white
+remappingJBMH.set(index(15,13), [targetChannel,baseIndex+11,true]) // white

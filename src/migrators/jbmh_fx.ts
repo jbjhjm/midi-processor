@@ -1,4 +1,3 @@
-import color from 'ansi-colors';
 import type { MidiFile } from "midifile-ts";
 import { globals } from '../globals.js';
 import { Remapper } from '../utils/remapper.js';
@@ -54,13 +53,6 @@ export default async function (midi:MidiFile, file:string) {
 	})
 	mapper.apply(midi.tracks[0])
 	
-	const changes = mapper.getChangeList()
-	if(changes.length > 0) {
-		process.stdout.write(color.green('Updated '+changes.length/2+' MIDI notes in file '+file+'\n'))
-		return true;
-	} else {
-		process.stdout.write(color.gray('No changes in file '+file+'\n'))
-		return false;
-	}
+	return mapper.reportChanges(file)
 
 }
