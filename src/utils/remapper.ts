@@ -5,13 +5,15 @@ import color from 'ansi-colors';
 
 export type RemappingEntry<TData=any> = [number, number, TData?];
 
-export type RemappingHandlerFn<TRemappingData> = (
+export type RemappingHandlerFn<TRemappingData,TState={}> = (
+	track: AnyEvent[],
 	event: NoteOnEvent|NoteOffEvent, 
 	index: number,
 	mapping: RemappingEntry<TRemappingData>,
 	tools: {
 		applyRegularRemapping:()=>any,
 		addChange:(event:AnyEvent)=>void,
+		state:TState // a storage that's persisted throughout the whole replacement process
 	}
 ) => void;
 
@@ -52,7 +54,11 @@ export class Remapper<TRemappingData> {
 		// console.log('batchRemap entries created', c, this.mappings)
 	}
 
-	apply(track: AnyEvent[], customHandler?:RemappingHandlerFn<TRemappingData>) {
+	apply<TState=Record<string,any>>(
+		track: AnyEvent[], 
+		customHandler?:RemappingHandlerFn<TRemappingData,TState>,
+		state:TState = {} as any
+	):TState {
 		// replace events
 		let i = 0;
 		while(i < track.length) {
@@ -68,12 +74,14 @@ export class Remapper<TRemappingData> {
 				}
 				if(customHandler) {
 					customHandler(
+						track,
 						event, 
 						i,
 						this.mappings.get(id),
 						{
 							applyRegularRemapping,
-							addChange:(change:AnyEvent)=>{ this.changeList.push(change) }
+							addChange:(change:AnyEvent)=>{ this.changeList.push(change) },
+							state,
 						}
 					);
 				} else {
@@ -83,7 +91,7 @@ export class Remapper<TRemappingData> {
 			i++;
 		}
 
-		return this.changeList;
+		return state;
 	}
 
 	getChangeList() {
