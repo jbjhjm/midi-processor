@@ -10,11 +10,13 @@ interface RemapState {
 export default async function (midi:MidiFile, file:string) {
 	
 	const mapperCh15 = new Remapper(15);
+	// mic segments
 	mapperCh15.batchRemap({
 		fromRange:[90, 93], 
 		target:{channel:-1, start:0}, 
 	})
 
+	// sun segments
 	const mapperCh16 = new Remapper(16);
 	mapperCh16.batchRemap({
 		fromRange:[60, 75], 

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.malighting.de/grandma2/xml/MA" xsi:schemaLocation="http://schemas.malighting.de/grandma2/xml/MA http://schemas.malighting.de/grandma2/xml/3.9.60/MA.xsd" major_vers="3" minor_vers="9" stream_vers="60">
+	<Info datetime="2026-01-24T23:31:44" showfile="sector_show_def_v1_20260116_rework2" />
+	<MidiRemotes index="1">
+
+		<RemoteMidi index="0" channel="1" note="11" type="exec" exec="100" page="current" />
+		<RemoteMidi index="1" channel="1" note="12" type="exec" exec="101" page="current" />
+		<RemoteMidi index="2" channel="1" note="13" type="exec" exec="102" page="current" />
+		<RemoteMidi index="3" channel="1" note="14" type="exec" exec="103" page="current" />
+		<RemoteMidi index="4" channel="1" note="15" type="exec" exec="104" page="current" />
+		<RemoteMidi index="5" channel="1" note="16" type="exec" exec="105" page="current" />
+		<RemoteMidi index="6" channel="1" note="17" type="exec" exec="106" page="current" />
+		<RemoteMidi index="7" channel="1" note="18" type="exec" exec="107" page="current" />
+		<RemoteMidi index="8" channel="1" note="19" type="exec" exec="108" page="current" />
+		<RemoteMidi index="9" channel="1" note="20" type="exec" exec="109" page="current" />
+		<RemoteMidi index="10" channel="1" note="1" type="exec" exec="0" page="current" />
+		<RemoteMidi index="11" channel="1" note="2" type="exec" exec="1" page="current" />
+		<RemoteMidi index="12" channel="1" note="3" type="exec" exec="2" page="current" />
+		<RemoteMidi index="13" channel="1" note="4" type="exec" exec="3" page="current" />
+		<RemoteMidi index="14" channel="1" note="5" type="exec" exec="4" page="current" />
+		<RemoteMidi index="15" channel="1" note="6" type="exec" exec="5" page="current" />
+		<RemoteMidi index="16" channel="1" note="7" type="exec" exec="6" page="current" />
+		<RemoteMidi index="17" channel="1" note="8" type="exec" exec="7" page="current" />
+		<RemoteMidi index="18" channel="1" note="9" type="exec" exec="8" page="current" />
+		<RemoteMidi index="19" channel="1" note="10" type="exec" exec="9" page="current" />
+		<RemoteMidi index="20" channel="1" note="35" type="macro_line">
+			<macro_line>Page 26</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="21" channel="1" note="36" type="macro_line">
+			<macro_line>Page 27</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="22" channel="1" note="37" type="macro_line">
+			<macro_line>Page 28</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="23" channel="1" note="38" type="macro_line">
+			<macro_line>Page 29</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="24" channel="1" note="39" type="macro_line">
+			<macro_line>Page 30</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="25" channel="1" note="40" type="macro_line">
+			<macro_line>Page 31</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="26" channel="1" note="41" type="macro_line">
+			<macro_line>Page 32</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="27" channel="1" note="42" type="macro_line">
+			<macro_line>Page 33</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="28" channel="1" note="43" type="macro_line">
+			<macro_line>Page 34</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="29" channel="1" note="24" type="macro_line">
+			<macro_line>Page 15</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="30" channel="1" note="25" type="macro_line">
+			<macro_line>Page 16</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="31" channel="1" note="26" type="macro_line">
+			<macro_line>Page 17</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="32" channel="1" note="27" type="macro_line">
+			<macro_line>Page 18</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="33" channel="1" note="28" type="macro_line">
+			<macro_line>Page 19</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="34" channel="1" note="30" type="macro_line">
+			<macro_line>Page 21</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="35" channel="1" note="33" type="macro_line">
+			<macro_line>Page 24</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="36" channel="1" note="34" type="macro_line">
+			<macro_line>Page 25</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="37" channel="1" note="31" type="macro_line">
+			<macro_line>Page 22</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="38" channel="1" note="32" type="macro_line">
+			<macro_line>Page 23</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="39" channel="1" note="44" type="macro_line">
+			<macro_line>Page 35</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="40" channel="1" note="45" type="macro_line">
+			<macro_line>Page 36</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="41" channel="1" note="46" type="macro_line">
+			<macro_line>Page 37</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="42" channel="1" note="47" type="macro_line">
+			<macro_line>Page 38</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="43" channel="1" note="48" type="macro_line">
+			<macro_line>Page 39</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="44" channel="1" note="49" type="macro_line">
+			<macro_line>Page 40</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="45" channel="1" note="50" type="macro_line">
+			<macro_line>Page 41</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="46" channel="1" note="51" type="macro_line">
+			<macro_line>Page 42</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="47" channel="1" note="52" type="macro_line">
+			<macro_line>Page 43</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="48" channel="1" note="53" type="macro_line">
+			<macro_line>Page 44</macro_line>
+		</RemoteMidi>
+		<RemoteMidi index="49" channel="2" note="12" type="exec" exec="160" page="2" />
+		<RemoteMidi index="50" channel="2" note="13" type="exec" exec="161" page="2" />
+		<RemoteMidi index="51" channel="2" note="14" type="exec" exec="162" page="2" />
+		<RemoteMidi index="52" channel="2" note="15" type="exec" exec="163" page="2" />
+		<RemoteMidi index="53" channel="2" note="16" type="exec" exec="164" page="2" />
+		<RemoteMidi index="54" channel="2" note="17" type="exec" exec="165" page="2" />
+		<RemoteMidi index="55" channel="2" note="18" type="exec" exec="166" page="2" />
+		<RemoteMidi index="56" channel="2" note="19" type="exec" exec="167" page="2" />
+		<RemoteMidi index="57" channel="2" note="20" type="exec" exec="168" page="2" />
+		<RemoteMidi index="58" channel="2" note="21" type="exec" exec="169" page="2" />
+		<RemoteMidi index="59" channel="2" note="22" type="exec" exec="170" page="2" />
+		<RemoteMidi index="60" channel="2" note="23" type="exec" exec="171" page="2" />
+		<RemoteMidi index="61" channel="2" note="24" type="exec" exec="172" page="2" />
+		<RemoteMidi index="62" channel="2" note="25" type="exec" exec="173" page="2" />
+		<RemoteMidi index="63" channel="2" note="26" type="exec" exec="174" page="2" />
+		<RemoteMidi index="64" channel="2" note="27" type="exec" exec="175" page="2" />
+		<RemoteMidi index="65" channel="2" note="28" type="exec" exec="176" page="2" />
+		<RemoteMidi index="66" channel="2" note="29" type="exec" exec="177" page="2" />
+		<RemoteMidi index="67" channel="2" note="30" type="exec" exec="178" page="2" />
+		<RemoteMidi index="68" channel="2" note="31" type="exec" exec="179" page="2" />
+		<RemoteMidi index="69" channel="2" note="32" type="exec" exec="180" page="2" />
+		<RemoteMidi index="70" channel="2" note="33" type="exec" exec="181" page="2" />
+		<RemoteMidi index="71" channel="2" note="34" type="exec" exec="182" page="2" />
+		<RemoteMidi index="72" channel="2" note="35" type="exec" exec="183" page="2" />
+		<RemoteMidi index="73" channel="2" note="36" type="exec" exec="184" page="2" />
+		<RemoteMidi index="74" channel="2" note="8" type="exec" exec="102" page="2" />
+		<RemoteMidi index="75" channel="2" note="9" type="exec" exec="100" page="2" />
+		<RemoteMidi index="76" channel="2" note="0" type="exec" exec="0" page="2" />
+		<RemoteMidi index="77" channel="6" note="11" type="exec" exec="100" page="6" />
+		<RemoteMidi index="78" channel="6" note="12" type="exec" exec="101" page="6" />
+		<RemoteMidi index="79" channel="6" note="13" type="exec" exec="102" page="6" />
+		<RemoteMidi index="80" channel="6" note="14" type="exec" exec="103" page="6" />
+		<RemoteMidi index="81" channel="6" note="15" type="exec" exec="104" page="6" />
+		<RemoteMidi index="82" channel="4" note="97" type="exec" exec="186" page="4" />
+		<RemoteMidi index="83" channel="4" note="98" type="exec" exec="187" page="4" />
+		<RemoteMidi index="84" channel="4" note="99" type="exec" exec="188" page="4" />
+		<RemoteMidi index="85" channel="4" note="100" type="exec" exec="189" page="4" />
+		<RemoteMidi index="86" channel="3" note="81" type="exec" exec="170" page="3" />
+		<RemoteMidi index="87" channel="3" note="82" type="exec" exec="171" page="3" />
+		<RemoteMidi index="88" channel="3" note="83" type="exec" exec="172" page="3" />
+		<RemoteMidi index="89" channel="3" note="84" type="exec" exec="173" page="3" />
+		<RemoteMidi index="90" channel="3" note="85" type="exec" exec="174" page="3" />
+		<RemoteMidi index="91" channel="3" note="86" type="exec" exec="175" page="3" />
+		<RemoteMidi index="92" channel="3" note="87" type="exec" exec="176" page="3" />
+		<RemoteMidi index="93" channel="3" note="88" type="exec" exec="177" page="3" />
+		<RemoteMidi index="94" channel="3" note="89" type="exec" exec="178" page="3" />
+		<RemoteMidi index="95" channel="3" note="90" type="exec" exec="179" page="3" />
+		<RemoteMidi index="96" channel="3" note="91" type="exec" exec="180" page="3" />
+		<RemoteMidi index="97" channel="3" note="92" type="exec" exec="181" page="3" />
+		<RemoteMidi index="98" channel="5" note="61" type="exec" exec="150" page="5" />
+		<RemoteMidi index="99" channel="5" note="62" type="exec" exec="151" page="5" />
+		<RemoteMidi index="100" channel="5" note="63" type="exec" exec="152" page="5" />
+		<RemoteMidi index="101" channel="5" note="64" type="exec" exec="153" page="5" />
+		<RemoteMidi index="102" channel="3" note="11" type="exec" exec="100" page="3" />
+		<RemoteMidi index="103" channel="3" note="12" type="exec" exec="101" page="3" />
+		<RemoteMidi index="104" channel="3" note="13" type="exec" exec="102" page="3" />
+		<RemoteMidi index="105" channel="3" note="14" type="exec" exec="103" page="3" />
+		<RemoteMidi index="106" channel="3" note="15" type="exec" exec="104" page="3" />
+		<RemoteMidi index="107" channel="5" note="11" type="exec" exec="100" page="5" />
+		<RemoteMidi index="108" channel="5" note="12" type="exec" exec="101" page="5" />
+		<RemoteMidi index="109" channel="5" note="13" type="exec" exec="102" page="5" />
+		<RemoteMidi index="110" channel="5" note="14" type="exec" exec="103" page="5" />
+		<RemoteMidi index="111" channel="5" note="15" type="exec" exec="104" page="5" />
+		<RemoteMidi index="112" channel="4" note="11" type="exec" exec="100" page="4" />
+		<RemoteMidi index="113" channel="4" note="12" type="exec" exec="101" page="4" />
+		<RemoteMidi index="114" channel="4" note="13" type="exec" exec="102" page="4" />
+		<RemoteMidi index="115" channel="4" note="14" type="exec" exec="103" page="4" />
+		<RemoteMidi index="116" channel="4" note="15" type="exec" exec="104" page="4" />
+		<RemoteMidi index="117" channel="4" note="41" type="exec" exec="130" page="4" />
+		<RemoteMidi index="118" channel="4" note="42" type="exec" exec="131" page="4" />
+		<RemoteMidi index="119" channel="4" note="43" type="exec" exec="132" page="4" />
+		<RemoteMidi index="120" channel="4" note="44" type="exec" exec="133" page="4" />
+		<RemoteMidi index="121" channel="4" note="45" type="exec" exec="134" page="4" />
+		<RemoteMidi index="122" channel="4" note="46" type="exec" exec="135" page="4" />
+		<RemoteMidi index="123" channel="4" note="47" type="exec" exec="136" page="4" />
+		<RemoteMidi index="124" channel="4" note="48" type="exec" exec="137" page="4" />
+		<RemoteMidi index="125" channel="4" note="49" type="exec" exec="138" page="4" />
+		<RemoteMidi index="126" channel="4" note="50" type="exec" exec="139" page="4" />
+		<RemoteMidi index="127" channel="4" note="51" type="exec" exec="140" page="4" />
+		<RemoteMidi index="128" channel="4" note="52" type="exec" exec="141" page="4" />
+		<RemoteMidi index="129" channel="4" note="53" type="exec" exec="142" page="4" />
+		<RemoteMidi index="130" channel="4" note="54" type="exec" exec="143" page="4" />
+		<RemoteMidi index="131" channel="4" note="55" type="exec" exec="144" page="4" />
+		<RemoteMidi index="132" channel="4" note="56" type="exec" exec="145" page="4" />
+		<RemoteMidi index="133" channel="4" note="57" type="exec" exec="146" page="4" />
+		<RemoteMidi index="134" channel="4" note="58" type="exec" exec="147" page="4" />
+		<RemoteMidi index="135" channel="4" note="59" type="exec" exec="148" page="4" />
+		<RemoteMidi index="136" channel="4" note="60" type="exec" exec="149" page="4" />
+		<RemoteMidi index="137" channel="4" note="61" type="exec" exec="150" page="4" />
+		<RemoteMidi index="138" channel="4" note="62" type="exec" exec="151" page="4" />
+		<RemoteMidi index="139" channel="4" note="63" type="exec" exec="152" page="4" />
+		<RemoteMidi index="140" channel="4" note="64" type="exec" exec="153" page="4" />
+		<RemoteMidi index="141" channel="4" note="65" type="exec" exec="154" page="4" />
+		<RemoteMidi index="142" channel="4" note="66" type="exec" exec="155" page="4" />
+		<RemoteMidi index="143" channel="4" note="67" type="exec" exec="156" page="4" />
+		<RemoteMidi index="144" channel="4" note="68" type="exec" exec="157" page="4" />
+		<RemoteMidi index="145" channel="4" note="69" type="exec" exec="158" page="4" />
+		<RemoteMidi index="146" channel="4" note="70" type="exec" exec="159" page="4" />
+		<RemoteMidi index="147" channel="4" note="71" type="exec" exec="160" page="4" />
+		<RemoteMidi index="148" channel="4" note="72" type="exec" exec="161" page="4" />
+		<RemoteMidi index="149" channel="4" note="73" type="exec" exec="162" page="4" />
+		<RemoteMidi index="150" channel="4" note="74" type="exec" exec="163" page="4" />
+		<RemoteMidi index="151" channel="4" note="75" type="exec" exec="164" page="4" />
+		<RemoteMidi index="152" channel="4" note="76" type="exec" exec="165" page="4" />
+		<RemoteMidi index="153" channel="4" note="77" type="exec" exec="166" page="4" />
+		<RemoteMidi index="154" channel="4" note="78" type="exec" exec="167" page="4" />
+		<RemoteMidi index="155" channel="4" note="79" type="exec" exec="168" page="4" />
+		<RemoteMidi index="156" channel="4" note="80" type="exec" exec="169" page="4" />
+		<RemoteMidi index="157" channel="4" note="81" type="exec" exec="170" page="4" />
+		<RemoteMidi index="158" channel="4" note="82" type="exec" exec="171" page="4" />
+		<RemoteMidi index="159" channel="4" note="83" type="exec" exec="172" page="4" />
+		<RemoteMidi index="160" channel="4" note="84" type="exec" exec="173" page="4" />
+		<RemoteMidi index="161" channel="4" note="85" type="exec" exec="174" page="4" />
+		<RemoteMidi index="162" channel="4" note="86" type="exec" exec="175" page="4" />
+		<RemoteMidi index="163" channel="4" note="87" type="exec" exec="176" page="4" />
+		<RemoteMidi index="164" channel="4" note="88" type="exec" exec="177" page="4" />
+		<RemoteMidi index="165" channel="4" note="89" type="exec" exec="178" page="4" />
+		<RemoteMidi index="166" channel="4" note="90" type="exec" exec="179" page="4" />
+		<RemoteMidi index="167" channel="4" note="91" type="exec" exec="180" page="4" />
+		<RemoteMidi index="168" channel="4" note="92" type="exec" exec="181" page="4" />
+		<RemoteMidi index="169" channel="4" note="93" type="exec" exec="182" page="4" />
+		<RemoteMidi index="170" channel="4" note="94" type="exec" exec="183" page="4" />
+		<RemoteMidi index="171" channel="3" note="24" type="exec" exec="113" page="3" />
+		<RemoteMidi index="172" channel="3" note="25" type="exec" exec="114" page="3" />
+		<RemoteMidi index="173" channel="3" note="26" type="exec" exec="115" page="3" />
+		<RemoteMidi index="174" channel="3" note="27" type="exec" exec="116" page="3" />
+		<RemoteMidi index="175" channel="5" note="24" type="exec" exec="113" page="5" />
+		<RemoteMidi index="176" channel="4" note="24" type="exec" exec="113" page="4" />
+		<RemoteMidi index="177" channel="4" note="25" type="exec" exec="114" page="4" />
+		<RemoteMidi index="178" channel="4" note="26" type="exec" exec="115" page="4" />
+		<RemoteMidi index="179" channel="4" note="27" type="exec" exec="116" page="4" />
+		<RemoteMidi index="180" channel="3" note="16" type="exec" exec="105" page="3" />
+		<RemoteMidi index="181" channel="3" note="17" type="exec" exec="106" page="3" />
+		<RemoteMidi index="182" channel="3" note="18" type="exec" exec="107" page="3" />
+		<RemoteMidi index="183" channel="3" note="19" type="exec" exec="108" page="3" />
+		<RemoteMidi index="184" channel="5" note="16" type="exec" exec="105" page="5" />
+		<RemoteMidi index="185" channel="4" note="16" type="exec" exec="105" page="4" />
+		<RemoteMidi index="186" channel="4" note="17" type="exec" exec="106" page="4" />
+		<RemoteMidi index="187" channel="4" note="18" type="exec" exec="107" page="4" />
+		<RemoteMidi index="188" channel="4" note="19" type="exec" exec="108" page="4" />
+		<RemoteMidi index="189" channel="3" note="20" type="exec" exec="109" page="3" />
+		<RemoteMidi index="190" channel="3" note="21" type="exec" exec="110" page="3" />
+		<RemoteMidi index="191" channel="3" note="22" type="exec" exec="111" page="3" />
+		<RemoteMidi index="192" channel="3" note="23" type="exec" exec="112" page="3" />
+		<RemoteMidi index="193" channel="5" note="20" type="exec" exec="109" page="5" />
+		<RemoteMidi index="194" channel="4" note="20" type="exec" exec="109" page="4" />
+		<RemoteMidi index="195" channel="4" note="21" type="exec" exec="110" page="4" />
+		<RemoteMidi index="196" channel="4" note="22" type="exec" exec="111" page="4" />
+		<RemoteMidi index="197" channel="4" note="23" type="exec" exec="112" page="4" />
+		<RemoteMidi index="198" channel="3" note="28" type="exec" exec="117" page="3" />
+		<RemoteMidi index="199" channel="3" note="29" type="exec" exec="118" page="3" />
+		<RemoteMidi index="200" channel="3" note="30" type="exec" exec="119" page="3" />
+		<RemoteMidi index="201" channel="3" note="31" type="exec" exec="120" page="3" />
+		<RemoteMidi index="202" channel="5" note="28" type="exec" exec="117" page="5" />
+		<RemoteMidi index="203" channel="4" note="28" type="exec" exec="117" page="4" />
+		<RemoteMidi index="204" channel="4" note="29" type="exec" exec="118" page="4" />
+		<RemoteMidi index="205" channel="4" note="30" type="exec" exec="119" page="4" />
+		<RemoteMidi index="206" channel="4" note="31" type="exec" exec="120" page="4" />
+		<RemoteMidi index="207" channel="3" note="41" type="exec" exec="130" page="3" />
+		<RemoteMidi index="208" channel="3" note="42" type="exec" exec="131" page="3" />
+		<RemoteMidi index="209" channel="3" note="43" type="exec" exec="132" page="3" />
+		<RemoteMidi index="210" channel="3" note="44" type="exec" exec="133" page="3" />
+		<RemoteMidi index="211" channel="3" note="45" type="exec" exec="134" page="3" />
+		<RemoteMidi index="212" channel="3" note="46" type="exec" exec="135" page="3" />
+		<RemoteMidi index="213" channel="3" note="47" type="exec" exec="136" page="3" />
+		<RemoteMidi index="214" channel="3" note="48" type="exec" exec="137" page="3" />
+		<RemoteMidi index="215" channel="3" note="49" type="exec" exec="138" page="3" />
+		<RemoteMidi index="216" channel="3" note="50" type="exec" exec="139" page="3" />
+		<RemoteMidi index="217" channel="3" note="51" type="exec" exec="140" page="3" />
+		<RemoteMidi index="218" channel="3" note="52" type="exec" exec="141" page="3" />
+		<RemoteMidi index="219" channel="3" note="53" type="exec" exec="142" page="3" />
+		<RemoteMidi index="220" channel="3" note="54" type="exec" exec="143" page="3" />
+		<RemoteMidi index="221" channel="3" note="55" type="exec" exec="144" page="3" />
+		<RemoteMidi index="222" channel="3" note="56" type="exec" exec="145" page="3" />
+		<RemoteMidi index="223" channel="3" note="57" type="exec" exec="146" page="3" />
+		<RemoteMidi index="224" channel="3" note="58" type="exec" exec="147" page="3" />
+		<RemoteMidi index="225" channel="3" note="59" type="exec" exec="148" page="3" />
+		<RemoteMidi index="226" channel="3" note="60" type="exec" exec="149" page="3" />
+		<RemoteMidi index="227" channel="3" note="61" type="exec" exec="150" page="3" />
+		<RemoteMidi index="228" channel="3" note="62" type="exec" exec="151" page="3" />
+		<RemoteMidi index="229" channel="3" note="63" type="exec" exec="152" page="3" />
+		<RemoteMidi index="230" channel="3" note="64" type="exec" exec="153" page="3" />
+		<RemoteMidi index="231" channel="3" note="65" type="exec" exec="154" page="3" />
+		<RemoteMidi index="232" channel="3" note="66" type="exec" exec="155" page="3" />
+		<RemoteMidi index="233" channel="3" note="67" type="exec" exec="156" page="3" />
+		<RemoteMidi index="234" channel="3" note="68" type="exec" exec="157" page="3" />
+		<RemoteMidi index="235" channel="3" note="69" type="exec" exec="158" page="3" />
+		<RemoteMidi index="236" channel="3" note="70" type="exec" exec="159" page="3" />
+		<RemoteMidi index="237" channel="3" note="71" type="exec" exec="160" page="3" />
+		<RemoteMidi index="238" channel="3" note="72" type="exec" exec="161" page="3" />
+		<RemoteMidi index="239" channel="3" note="73" type="exec" exec="162" page="3" />
+		<RemoteMidi index="240" channel="3" note="74" type="exec" exec="163" page="3" />
+		<RemoteMidi index="241" channel="3" note="75" type="exec" exec="164" page="3" />
+		<RemoteMidi index="242" channel="3" note="76" type="exec" exec="165" page="3" />
+		<RemoteMidi index="243" channel="3" note="77" type="exec" exec="166" page="3" />
+		<RemoteMidi index="244" channel="3" note="78" type="exec" exec="167" page="3" />
+		<RemoteMidi index="245" channel="3" note="79" type="exec" exec="168" page="3" />
+		<RemoteMidi index="246" channel="3" note="80" type="exec" exec="169" page="3" />
+		<RemoteMidi index="247" channel="5" note="41" type="exec" exec="130" page="5" />
+		<RemoteMidi index="248" channel="5" note="42" type="exec" exec="131" page="5" />
+		<RemoteMidi index="249" channel="5" note="43" type="exec" exec="132" page="5" />
+		<RemoteMidi index="250" channel="5" note="44" type="exec" exec="133" page="5" />
+		<RemoteMidi index="251" channel="5" note="45" type="exec" exec="134" page="5" />
+		<RemoteMidi index="252" channel="5" note="46" type="exec" exec="135" page="5" />
+		<RemoteMidi index="253" channel="5" note="47" type="exec" exec="136" page="5" />
+		<RemoteMidi index="254" channel="5" note="48" type="exec" exec="137" page="5" />
+		<RemoteMidi index="255" channel="5" note="49" type="exec" exec="138" page="5" />
+		<RemoteMidi index="256" channel="5" note="50" type="exec" exec="139" page="5" />
+		<RemoteMidi index="257" channel="5" note="51" type="exec" exec="140" page="5" />
+		<RemoteMidi index="258" channel="5" note="52" type="exec" exec="141" page="5" />
+		<RemoteMidi index="259" channel="5" note="53" type="exec" exec="142" page="5" />
+		<RemoteMidi index="260" channel="5" note="54" type="exec" exec="143" page="5" />
+		<RemoteMidi index="261" channel="5" note="55" type="exec" exec="144" page="5" />
+		<RemoteMidi index="262" channel="5" note="56" type="exec" exec="145" page="5" />
+
+	</MidiRemotes>
+</MA>

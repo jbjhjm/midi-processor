@@ -1,8 +1,8 @@
 import color from 'ansi-colors';
-import type { AnyEvent, MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
+import type { AnyEvent, ChannelEvent, MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
 import { channelNoteIndex as index } from '../utils/matchers.js';
 import { globals } from '../globals.js';
-import { isMidiNote } from '../utils/midi.js';
+import { insertMidiEvent, isMidiNote } from '../utils/midi.js';
 
 const allowedChannels = [15].map(v=>v-1); // WARNING: 0-15 !!!
 type RemappingEntry = [number, number, boolean?];
@@ -45,10 +45,11 @@ function applyRemapping(track: AnyEvent[], remappings:Map<number, RemappingEntry
 			// we ignore noteOff events and only trigger white mode on and off based on what is being triggered.
 			// this allows for easy manual refinement later.
 			if(event.subtype==='noteOn') {
+				// TODO: for some reason it seems the white trigger is positioned some ticks before the trigger even tho deltaTime is set to 0?!
 				if(whiteActive !== useWhiteMode) {
 					const event = buildWhiteModeEvent(useWhiteMode, whiteModeChannel);
 					changes.push(event)
-					track.splice(i,0, event);
+					insertMidiEvent(track,event,i,0)
 					whiteActive = useWhiteMode;
 					i++;
 				}
@@ -57,20 +58,20 @@ function applyRemapping(track: AnyEvent[], remappings:Map<number, RemappingEntry
 		i++;
 	}
 	if(whiteActive) {
-		track.push(buildWhiteModeEvent(false, whiteModeChannel));
+		insertMidiEvent(track,buildWhiteModeEvent(false, whiteModeChannel),i,0)
 	}
 
 	return changes;
 }
 
-function buildWhiteModeEvent(useWhiteMode: boolean, whiteModeChannel: number): AnyEvent {
+function buildWhiteModeEvent(useWhiteMode: boolean, whiteModeChannel: number): NoteOnEvent|NoteOffEvent {
 	// console.log('set white mode toggle to '+useWhiteMode+' after event')
 	return {
 		deltaTime: 0,
 		type: 'channel',
 		subtype: useWhiteMode ? 'noteOn' : 'noteOff',
 		channel: whiteModeChannel - 1, // 0-15!
-		noteNumber: 12,
+		noteNumber: 13,
 		velocity: 127,
 	};
 }
