@@ -17,7 +17,7 @@ export default async function (midi:MidiFile, file:string) {
 			// --> ch 4 @ 001
 			const index = event.noteNumber - 1;
 			event.velocity = [100,80,60,40,30,20,10,5,0][index];
-			event.channel = globals.channels.jbmh;  // WARNING: 0-15 !!!
+			event.channel = globals.channels.jbmh - 1;  // WARNING: 0-15 !!!
 			event.noteNumber = 2;
 			changes.push(event);
 		}
