@@ -1,5 +1,4 @@
 import type { AnyEvent, ChannelEvent, MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
-import { insertMidiEvent } from '../utils/midi.js';
 import { Remapper, RemappingHandlerFn } from '../utils/remapper.js';
 import ansiColors from 'ansi-colors';
 
@@ -82,7 +81,6 @@ export default async function (midi:MidiFile, file:string) {
 	let state: RemappingState = {file, usedPages:[]};
 	state = mapper.apply<RemappingState>(track, handler, state)
 	state = mapperCh2.apply<RemappingState>(track, handler, state)
-	finalize(track,state)
 
 	const usedPages = state.usedPages.reduce((unique, page)=>{ 
 		if(!unique.find(p=>p.pageTrigger===page.pageTrigger)) {
@@ -105,6 +103,8 @@ const handler:RemappingHandlerFn<RemappingData, RemappingState> = (track,event,i
 	const config = mapping[2];
 	const s = tools.state;
 	const pageTrigger = config?.page;
+	const requestsDisallowedPage = s.usedPages.length > 0 && s.usedPages[0].pageTrigger !== pageTrigger;
+	if(requestsDisallowedPage) console.log('event requests disallowed page',pageTrigger,' song page is: '+s.usedPages[0], event)
 	// we ignore noteOff events and only trigger white mode on and off based on what is being triggered.
 	// this allows for easy manual refinement later.
 	// order is important! execute before regular remapping so that the original event can be captured.
@@ -116,15 +116,23 @@ const handler:RemappingHandlerFn<RemappingData, RemappingState> = (track,event,i
 			tools.insertRelativeEvent(s.pageSelectionEvent, -900)
 		}
 	}
-	tools.applyRegularRemapping();
-	s.currentTrackIndex = index;
-}
 
-function finalize(track:AnyEvent[], state:RemappingState) {
+	if(requestsDisallowedPage) {
+		// executors that belong to a disallowed page will be mapped to exec 8 allowing for easier identification.
+		event.channel = 0;
+		event.noteNumber = 20;
+		tools.addChange(event);
+	} else {
+		tools.applyRegularRemapping();
+	}
+	s.currentTrackIndex = index;
+
 	// insert end of page trigger
-	if(state.pageSelectionEvent) {
-		const endEvent = { ...state.pageSelectionEvent, subtype:'noteOff' };
-		insertMidiEvent(track, endEvent, state.currentTrackIndex, 0)
+	if(index+1 === track.length) {
+		if(tools.state.pageSelectionEvent) {
+			const endEvent = { ...tools.state.pageSelectionEvent, subtype:'noteOff' };
+			tools.insertRelativeEvent(endEvent, 0)
+		}
 	}
 }
 
