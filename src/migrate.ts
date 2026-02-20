@@ -15,7 +15,13 @@ const midi = await import("midifile-ts");
 
 
 const migrators = await glob('migrators/*.ts', {cwd:path.join(process.cwd(),'src')})
-const migratorSelection = await checkbox<string>({ message:'Select which migration to execute', choices:migrators, shortcuts:{all:'a'} })
+const migratorChoices = migrators.map(m=>{
+	return {
+		value:m,
+		checked:true// m === 'migrators\\flashes.ts'
+	};
+})
+const migratorSelection = await checkbox<string>({ message:'Select which migration to execute', shortcuts:{all:'a'}, choices:migratorChoices,  })
 
 const migratorFns = await Promise.all(migratorSelection.map(async file => {
 	const importPath = './'+path.normalize(file.substring(0, file.length - 3)).replaceAll(/\\/g, '/');
@@ -27,7 +33,7 @@ const migratorFns = await Promise.all(migratorSelection.map(async file => {
 }))
 migratorFns.sort((a,b)=>b.priority-a.priority)
 
-const fromBackup = await input({ message: 'Use backup data? (y/n)', default:'y' });
+const fromBackup = await input({ message: 'Use backup data? (y/n)', default:'n' });
 const applyChanges = await input({ message: 'Apply changes? (y/n)', default:'y' });
 
 const inputPath = sanitizeFilePath(await input({ message: 'This utility searches for Midi events within a directory. \n'
