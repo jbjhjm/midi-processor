@@ -1,6 +1,6 @@
 import type { AnyEvent, MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
 import { globals } from '../globals.js';
-import { getDeltaTimeBetween, insertMidiEvent, isEventMarked, isMidiNote } from '../utils/midi.js';
+import { getDeltaTimeBetween, isMidiNote } from '../utils/midi.js';
 import { Remapper, RemappingHandlerFn, RemappingHandlerTools } from '../utils/remapper.js';
 
 type RemappingData = {white:boolean};
@@ -77,7 +77,6 @@ export default async function (midi:MidiFile, file:string) {
 	state = mapperMic.apply<RemappingState>(midi, handler, state)
 	state = mapperSuns.apply<RemappingState>(midi, handler, state)
 	state = mapperJbmh.apply<RemappingState>(midi, handler, state)
-	finalize(midi.tracks[0],state)
 
 	return mapperSuns.reportChanges(file)
 		|| mapperMic.reportChanges(file)
@@ -169,13 +168,6 @@ function findTicksUntilNextRemappedEvent(track:AnyEvent[], index:number, tools:R
 	return 99999999 // there is no remapped event after the current.
 }
 
-function finalize(track:AnyEvent[], state:RemappingState) {
-	Array.from(state.whites.entries()).forEach(([channel, whiteModeActive]) => {
-		if(whiteModeActive) {
-			insertMidiEvent(track, buildWhiteModeEvent(false, channel), track.length-1, 0)
-		}
-	})
-}
 
 function buildWhiteModeEvent(useWhiteMode: boolean, whiteModeChannel: number): NoteOnEvent|NoteOffEvent {
 	// console.log('set white mode toggle to '+useWhiteMode+' after event')
