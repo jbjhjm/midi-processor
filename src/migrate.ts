@@ -4,7 +4,7 @@ import { glob } from 'glob';
 import type { MidiFile } from "midifile-ts";
 import * as path from 'path';
 import color from 'ansi-colors';
-import { collectFiles, fileExists, sanitizeFilePath } from './utils/files.js';
+import { collectFiles, fileExists, sanitizeFilePath, writeFile } from './utils/files.js';
 import { globals } from './globals.js';
 
 /**
@@ -75,8 +75,7 @@ async function processFile(relPath:string) {
 
 	if(applyChanges==='y') {
 		const fileBuffer = await midi.write(midiData.tracks, midiData.header.ticksPerBeat);
-		await fs.writeFile(fullPath, new Uint8Array(fileBuffer));
-		console.log('Saving changes to file '+relPath)
+		await writeFile(fileBuffer, fullPath, true)
 	} else {
 		console.log('(dry run) not saving to '+relPath)
 	}

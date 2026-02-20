@@ -3,6 +3,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import type { MidiFile } from "midifile-ts";
 import processMidiData from './processor/processor.js'
+import { writeFile } from './utils/files.js';
 
 const midi = await import("midifile-ts");
 const program = new Command();
@@ -57,13 +58,8 @@ async function processFile(filePath:string, settings:Settings) {
 	console.log('Completed processing of file '+filePath)
 
 	if(settings.save) {
-		if(!settings.overwrite) {
-			fs.rename(filePath, filePath+'.bak')
-		}
-
 		const fileBuffer = await midi.write(midiData.tracks, midiData.header.ticksPerBeat);
-		await fs.writeFile(filePath, new Uint8Array(fileBuffer));
-		console.log('Updated file.')
+		await writeFile(fileBuffer, filePath, settings.overwrite)
 	}
 }
 
