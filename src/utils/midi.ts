@@ -56,12 +56,14 @@ export function insertMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>,
 	addMidiEvent(track, eventData, position);
 }
 
-export function markGeneratedEvent(event:AnyEvent|ChannelEvent<any>) {
-	event["__generated"] = true
+const markings = new Map<string, Set<AnyEvent|ChannelEvent<any>>>();
+
+export function markEvent(event:AnyEvent|ChannelEvent<any>, type:string) {
+	event["__"+type] = true
 }
 
-export function isGeneratedEvent(event:AnyEvent|ChannelEvent<any>):boolean {
-	return !!event["__generated"]
+export function isEventMarked(event:AnyEvent|ChannelEvent<any>, type:string):boolean {
+	return !!event["__"+type]
 }
 
 function addMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>, pos:InsertPositionInfo) {
@@ -70,7 +72,7 @@ function addMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>, pos:Inser
 		...eventData,
 		deltaTime: pos.ticksAfterTarget,
 	};
-	markGeneratedEvent(event)
+	markEvent(event, 'generated')
 	if(pos.prepend) {
 		event.deltaTime = 0;
 		track.unshift(event as AnyEvent);
@@ -90,6 +92,17 @@ export function removeMidiEvents(track: AnyEvent[], targetIndex:number, removeCo
 	}
 	track.splice(targetIndex + 1, removeCount);
 	track[targetIndex + 1].deltaTime += deltaTimeSum;
+}
+
+export function getDeltaTimeBetween(track: AnyEvent[], aIndex:number, bIndex:number):number {
+	const startIndex = aIndex < bIndex ? aIndex : bIndex;
+	const targetIndex = aIndex < bIndex ? bIndex : aIndex;
+	let sum = 0
+	for(let i = startIndex+1; i <=targetIndex; i++) {
+		sum += track[i].deltaTime
+	}
+	// console.log('getDeltaTimeBetween',startIndex,targetIndex,sum)
+	return sum
 }
 
 function logDeltaTimesInRange(startPosition:number, endPosition:number, track: AnyEvent[], highlights:number[]=[]) {
