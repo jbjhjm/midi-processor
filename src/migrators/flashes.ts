@@ -1,67 +1,179 @@
-import color from 'ansi-colors';
-import type { AnyEvent, ChannelEvent, MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
-import { channelNoteIndex as index } from '../utils/matchers.js';
+import type { AnyEvent, MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
 import { globals } from '../globals.js';
-import { insertMidiEvent, isMidiNote } from '../utils/midi.js';
+import { getDeltaTimeBetween, insertMidiEvent, isEventMarked, isMidiNote } from '../utils/midi.js';
+import { Remapper, RemappingHandlerFn, RemappingHandlerTools } from '../utils/remapper.js';
 
-const allowedChannels = [15].map(v=>v-1); // WARNING: 0-15 !!!
-type RemappingEntry = [number, number, boolean?];
+type RemappingData = {white:boolean};
+type RemappingState = {
+	whites:Map<number,boolean> // index = channel number
+};
 
 export default async function (midi:MidiFile, file:string) {
-	const track = midi.tracks[0];
-	const changes:AnyEvent[] = [];
+
+	const srcChannel = 15;
+	const baseIndex = 16;
 	
-	changes.push(...applyRemapping(track, remappingSuns, globals.channels.suns));
+	// sun fadein
+	const mapperSuns = new Remapper<RemappingData>(srcChannel);
+	mapperSuns.remap(15	, globals.channels.suns, baseIndex+0, {white:false});
+	mapperSuns.remap(16	, globals.channels.suns, baseIndex+1, {white:false});
+	mapperSuns.remap(17	, globals.channels.suns, baseIndex+2, {white:false});
+	mapperSuns.remap(18	, globals.channels.suns, baseIndex+3, {white:false});
+	// sun flash
+	mapperSuns.remap(75	, globals.channels.suns, baseIndex+4, {white:false});
+	mapperSuns.remap(76	, globals.channels.suns, baseIndex+5, {white:false});
+	mapperSuns.remap(77	, globals.channels.suns, baseIndex+6, {white:false});
+	mapperSuns.remap(78	, globals.channels.suns, baseIndex+7, {white:false});
+	// sun fadeout
+	mapperSuns.remap(0	, globals.channels.suns, baseIndex+8, {white:false});
+	mapperSuns.remap(1	, globals.channels.suns, baseIndex+9, {white:false});
+	mapperSuns.remap(2	, globals.channels.suns, baseIndex+10,{white:false});
+	mapperSuns.remap(3	, globals.channels.suns, baseIndex+11,{white:false});
 
-	changes.push(...applyRemapping(track, remappingMic, globals.channels.mic));
+	// mic fadein
+	const mapperMic = new Remapper<RemappingData>(srcChannel);
+	mapperMic.remap(19	, globals.channels.mic, baseIndex+0, {white:false});
+	mapperMic.remap(24	, globals.channels.mic, baseIndex+0, {white:true});
+	// mic flash
+	mapperMic.remap(29	, globals.channels.mic, baseIndex+4, {white:false});
+	mapperMic.remap(84	, globals.channels.mic, baseIndex+4, {white:true});
+	// mic fadeout
+	mapperMic.remap(4	, globals.channels.mic, baseIndex+8, {white:false});
+	mapperMic.remap(9	, globals.channels.mic, baseIndex+8, {white:true});
 
-	changes.push(...applyRemapping(track, remappingJBMH, globals.channels.jbmh));
+	// jbmh fadein
+	const mapperJbmh = new Remapper<RemappingData>(srcChannel);
+	mapperJbmh.remap(20	, globals.channels.jbmh, baseIndex+0, {white:false});
+	mapperJbmh.remap(21	, globals.channels.jbmh, baseIndex+1, {white:false});
+	mapperJbmh.remap(22	, globals.channels.jbmh, baseIndex+2, {white:false});
+	mapperJbmh.remap(23	, globals.channels.jbmh, baseIndex+3, {white:false});
+	mapperJbmh.remap(25	, globals.channels.jbmh, baseIndex+0, {white:true});
+	mapperJbmh.remap(26	, globals.channels.jbmh, baseIndex+1, {white:true});
+	mapperJbmh.remap(27	, globals.channels.jbmh, baseIndex+2, {white:true});
+	mapperJbmh.remap(28	, globals.channels.jbmh, baseIndex+3, {white:true});
+	// jbmh flash
+	mapperJbmh.remap(80	, globals.channels.jbmh, baseIndex+4, {white:false});
+	mapperJbmh.remap(81	, globals.channels.jbmh, baseIndex+5, {white:false});
+	mapperJbmh.remap(82	, globals.channels.jbmh, baseIndex+6, {white:false});
+	mapperJbmh.remap(83	, globals.channels.jbmh, baseIndex+7, {white:false});
+	mapperJbmh.remap(85	, globals.channels.jbmh, baseIndex+4, {white:true});
+	mapperJbmh.remap(86	, globals.channels.jbmh, baseIndex+5, {white:true});
+	mapperJbmh.remap(87	, globals.channels.jbmh, baseIndex+6, {white:true});
+	mapperJbmh.remap(88	, globals.channels.jbmh, baseIndex+7, {white:true});
+	// jbmh fadeout
+	mapperJbmh.remap(5	, globals.channels.jbmh, baseIndex+8, {white:false});
+	mapperJbmh.remap(6	, globals.channels.jbmh, baseIndex+9, {white:false});
+	mapperJbmh.remap(7	, globals.channels.jbmh, baseIndex+10,{white:false});
+	mapperJbmh.remap(8	, globals.channels.jbmh, baseIndex+11,{white:false});
+	mapperJbmh.remap(10	, globals.channels.jbmh, baseIndex+8, {white:true});
+	mapperJbmh.remap(11	, globals.channels.jbmh, baseIndex+9, {white:true});
+	mapperJbmh.remap(12	, globals.channels.jbmh, baseIndex+10,{white:true});
+	mapperJbmh.remap(13	, globals.channels.jbmh, baseIndex+11,{white:true});
 
-	if(changes.length > 0) {
-		process.stdout.write(color.green('Updated '+changes.length/2+' MIDI notes in file '+file+'\n'))
-		return true;
-	} else {
-		process.stdout.write(color.gray('No changes in file '+file+'\n'))
-		return false;
-	}
+	let state: RemappingState = {
+		whites: new Map<number,boolean>()
+	};
+	state = mapperMic.apply<RemappingState>(midi, handler, state)
+	state = mapperSuns.apply<RemappingState>(midi, handler, state)
+	state = mapperJbmh.apply<RemappingState>(midi, handler, state)
+	finalize(midi.tracks[0],state)
+
+	return mapperSuns.reportChanges(file)
+		|| mapperMic.reportChanges(file)
+		|| mapperJbmh.reportChanges(file)
 
 }
 
-function applyRemapping(track: AnyEvent[], remappings:Map<number, RemappingEntry>, whiteModeChannel:number) {
-	let changes = [];
+const handler:RemappingHandlerFn<RemappingData, RemappingState> = (track,event,index,mapping,tools)=>{
+	// const id = index(event.channel + 1, event.noteNumber);
+	const [channel, note, data] = mapping;
+	const whiteModeActive = tools.state.whites.get(channel) || false;
+	const whiteModeEnable = data.white || false;
 
-	// replace events
-	let i = 0;
-	let whiteActive = false;
-	while(i < track.length) {
-		const event = track[i];
-		if(isRemappedEvent(event, remappings)) {
-			const id = index(event.channel + 1, event.noteNumber);
-			const [channel, note, isWhiteMode] = remappings.get(id);
-			const useWhiteMode = isWhiteMode || false;
-			event.channel = channel - 1;
-			event.noteNumber = note;
-			changes.push(event);
-			// we ignore noteOff events and only trigger white mode on and off based on what is being triggered.
-			// this allows for easy manual refinement later.
-			if(event.subtype==='noteOn') {
-				// TODO: for some reason it seems the white trigger is positioned some ticks before the trigger even tho deltaTime is set to 0?!
-				if(whiteActive !== useWhiteMode) {
-					const event = buildWhiteModeEvent(useWhiteMode, whiteModeChannel);
-					changes.push(event)
-					insertMidiEvent(track,event,i,0)
-					whiteActive = useWhiteMode;
-					i++;
+	// we ignore noteOff events and only trigger white mode on and off based on what is being triggered.
+	// this allows for easy manual refinement later.
+	if(event.subtype==='noteOn') {
+		if(event !== track[index]) throw new Error('index mismatch!')
+		const toggleOff = !whiteModeEnable;
+		const mustToggleNow = whiteModeActive !== whiteModeEnable;
+		if(toggleOff) {
+			if(mustToggleNow) {
+				tools.insertRelativeEvent( buildWhiteModeEvent(whiteModeEnable, channel), -1 )
+				tools.state.whites.set(channel,false);
+			}
+		} else if(!toggleOff) {
+			// this is a bit tricky. white mode should be toggled on or stay on ... but until when?
+			// There may be a bunch of remapped events right next or on top of each other.
+			// but it could also be that the next event happens minutes later.
+			// or that the current event is the last remapped event in the track.
+			// in such cases, we want to auto-end white mode.
+			const autoOffAfterTicks = 4 * tools.getTicksPerBeat();
+			let ticksToNextRemap = findTicksUntilNextRemappedEvent(track, index, tools) 
+			
+			// const noteLength = getDeltaTimeBetween(track, index, noteEnd.index) / tools.getTicksPerBeat();
+			// console.log('mustToggleNow?',mustToggleNow,'beatsToNextRemap',ticksToNextRemap/ tools.getTicksPerBeat())
+
+
+			if(mustToggleNow) {
+				// off to on
+				// some events are following in close range, white should be on but is not on yet.
+				// next remapping is close, leave it to another note remapping call to toggle off white mode	
+				tools.insertRelativeEvent( buildWhiteModeEvent(true, channel), -1 )
+				tools.state.whites.set(channel,true);
+			}
+
+			// white enabled is being continued
+			// if next note is far away, auto-end white mode
+			// now that we know no remapped event is following in short time,
+			// we need to find the noteOff event and recheck from there.
+			if(ticksToNextRemap > autoOffAfterTicks) {
+				const noteEnd = tools.findNoteEnd(event)
+				if(!noteEnd) throw new Error('could not find note end ');
+				const noteLength = getDeltaTimeBetween(track, index, noteEnd.index);
+
+				// it could be that the distance of note END to next remapped Event is so close that no auto-off should happen!
+				if(ticksToNextRemap - noteLength > autoOffAfterTicks) {
+					// as the whitemode off note should be x beats after the note ends.
+					const tickOffset = noteLength + autoOffAfterTicks
+					
+					// console.log('>>>> insert white mode auto-off, found note length is ',noteLength / tools.getTicksPerBeat(),
+					// 'so insert the auto-off after beats: '+tickOffset/tools.getTicksPerBeat())
+					// next use is far away, create an auto-off note
+					tools.insertRelativeEvent( buildWhiteModeEvent(false, channel), tickOffset)
+					// we know that the white mode will be off'd before the next remapped note so we can safely set it to false.
+					tools.state.whites.set(channel,false); 
 				}
 			}
 		}
-		i++;
-	}
-	if(whiteActive) {
-		insertMidiEvent(track,buildWhiteModeEvent(false, whiteModeChannel),i,0)
 	}
 
-	return changes;
+	// must be done last! findTicksUntilNextRemappedEvent relies on the original event data!
+	tools.applyRegularRemapping();
+
+}
+
+// tricky thing: we cannot use the related noteEnd event reliably, because other remapped notes may be triggered parallely.
+function findTicksUntilNextRemappedEvent(track:AnyEvent[], index:number, tools:RemappingHandlerTools<RemappingData, RemappingState>) {
+	const nextRemappedEvent = tools.findEvent(e=>{
+		if(!isMidiNote(e)) return false;
+		if((e as NoteOnEvent).subtype!=='noteOn') return false;
+		return tools.isMarked(e,'remapped');
+	})
+	if(nextRemappedEvent) {
+		const ticksUntilToggle = getDeltaTimeBetween(track, index, nextRemappedEvent.index)
+		// console.log('lookahead: next remapped note is '+(ticksUntilToggle/tools.getTicksPerBeat())+' beats away.',index,nextRemappedEvent)
+		return ticksUntilToggle
+	}
+	// console.log('lookahead: nothing found')
+	return 99999999 // there is no remapped event after the current.
+}
+
+function finalize(track:AnyEvent[], state:RemappingState) {
+	Array.from(state.whites.entries()).forEach(([channel, whiteModeActive]) => {
+		if(whiteModeActive) {
+			insertMidiEvent(track, buildWhiteModeEvent(false, channel), track.length-1, 0)
+		}
+	})
 }
 
 function buildWhiteModeEvent(useWhiteMode: boolean, whiteModeChannel: number): NoteOnEvent|NoteOffEvent {
@@ -76,73 +188,4 @@ function buildWhiteModeEvent(useWhiteMode: boolean, whiteModeChannel: number): N
 	};
 }
 
-function isRemappedEvent(event:AnyEvent, remappings:Map<number, RemappingEntry>): event is NoteOnEvent|NoteOffEvent {
-	if(!isMidiNote(event)) return false;
-	if(!allowedChannels.includes(event.channel)) return false;
-	const id = index(event.channel+1, event.noteNumber);
-	return remappings.has(id)
-}
 
-
-const remappingSuns = new Map<number, RemappingEntry>()
-let targetChannel = globals.channels.suns
-const baseIndex = 16;
-// sun fadein
-remappingSuns.set(index(15,15), [targetChannel,baseIndex])
-remappingSuns.set(index(15,16), [targetChannel,baseIndex+1])
-remappingSuns.set(index(15,17), [targetChannel,baseIndex+2])
-remappingSuns.set(index(15,18), [targetChannel,baseIndex+3])
-// sun flash
-remappingSuns.set(index(15,75), [targetChannel,baseIndex+4])
-remappingSuns.set(index(15,76), [targetChannel,baseIndex+5])
-remappingSuns.set(index(15,77), [targetChannel,baseIndex+6])
-remappingSuns.set(index(15,78), [targetChannel,baseIndex+7])
-// sun fadeout
-remappingSuns.set(index(15,0), [targetChannel,baseIndex+8])
-remappingSuns.set(index(15,1), [targetChannel,baseIndex+9])
-remappingSuns.set(index(15,2), [targetChannel,baseIndex+10])
-remappingSuns.set(index(15,3), [targetChannel,baseIndex+11])
-
-
-const remappingMic = new Map<number, RemappingEntry>()
-targetChannel = globals.channels.mic
-// mic fadein
-remappingMic.set(index(15,19), [targetChannel,baseIndex])
-remappingMic.set(index(15,24), [targetChannel,baseIndex,true]) // white
-// mic flash
-remappingMic.set(index(15,29), [targetChannel,baseIndex+4])
-remappingMic.set(index(15,84), [targetChannel,baseIndex+4,true]) // white
-// mic fadeout
-remappingMic.set(index(15,4), [targetChannel,baseIndex+8])
-remappingMic.set(index(15,9), [targetChannel,baseIndex+8,true]) // white
-
-
-const remappingJBMH = new Map<number, RemappingEntry>()
-targetChannel = globals.channels.jbmh
-// jbmh fadein
-remappingJBMH.set(index(15,20), [targetChannel,baseIndex])
-remappingJBMH.set(index(15,21), [targetChannel,baseIndex+1])
-remappingJBMH.set(index(15,22), [targetChannel,baseIndex+2])
-remappingJBMH.set(index(15,23), [targetChannel,baseIndex+3])
-remappingJBMH.set(index(15,25), [targetChannel,baseIndex,true]) // white
-remappingJBMH.set(index(15,26), [targetChannel,baseIndex+1,true]) // white
-remappingJBMH.set(index(15,27), [targetChannel,baseIndex+2,true]) // white
-remappingJBMH.set(index(15,28), [targetChannel,baseIndex+3,true]) // white
-// jbmh flash
-remappingJBMH.set(index(15,80), [targetChannel,baseIndex+4])
-remappingJBMH.set(index(15,81), [targetChannel,baseIndex+1+5])
-remappingJBMH.set(index(15,82), [targetChannel,baseIndex+6])
-remappingJBMH.set(index(15,83), [targetChannel,baseIndex+7])
-remappingJBMH.set(index(15,85), [targetChannel,baseIndex+4,true]) // white
-remappingJBMH.set(index(15,86), [targetChannel,baseIndex+1+5,true]) // white
-remappingJBMH.set(index(15,87), [targetChannel,baseIndex+6,true]) // white
-remappingJBMH.set(index(15,88), [targetChannel,baseIndex+7,true]) // white
-// jbmh fadeout
-remappingJBMH.set(index(15,5), [targetChannel,baseIndex+8])
-remappingJBMH.set(index(15,6), [targetChannel,baseIndex+9])
-remappingJBMH.set(index(15,7), [targetChannel,baseIndex+10])
-remappingJBMH.set(index(15,8), [targetChannel,baseIndex+11])
-remappingJBMH.set(index(15,10), [targetChannel,baseIndex+8,true]) // white
-remappingJBMH.set(index(15,11), [targetChannel,baseIndex+9,true]) // white
-remappingJBMH.set(index(15,12), [targetChannel,baseIndex+10,true]) // white
-remappingJBMH.set(index(15,13), [targetChannel,baseIndex+11,true]) // white
