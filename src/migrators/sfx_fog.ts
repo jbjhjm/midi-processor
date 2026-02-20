@@ -3,6 +3,7 @@ import { globals } from '../globals.js';
 import { Remapper } from '../utils/remapper.js';
 
 
+export const priority = -5;
 export default async function (midi:MidiFile, file:string) {
 	const mapper = new Remapper(15);
 

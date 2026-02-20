@@ -8,6 +8,7 @@ type RemappingState = {
 	whites:Map<number,boolean> // index = channel number
 };
 
+export const priority = 3;
 export default async function (midi:MidiFile, file:string) {
 
 	const srcChannel = 15;

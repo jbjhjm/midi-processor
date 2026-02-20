@@ -17,14 +17,15 @@ const midi = await import("midifile-ts");
 const migrators = await glob('migrators/*.ts', {cwd:path.join(process.cwd(),'src')})
 const migratorSelection = await checkbox<string>({ message:'Select which migration to execute', choices:migrators, shortcuts:{all:'a'} })
 
-const importFns = migratorSelection.map(file => {
+const migratorFns = await Promise.all(migratorSelection.map(async file => {
 	const importPath = './'+path.normalize(file.substring(0, file.length - 3)).replaceAll(/\\/g, '/');
-	return (async () => {
-		return await import(importPath).then(m=>m.default)
-	})()
-})
-
-const migratorFns = await Promise.all(importFns)
+	const mod = await import(importPath);
+	return {
+		fn:mod.default,
+		priority:mod.priority || 0,
+	}
+}))
+migratorFns.sort((a,b)=>b.priority-a.priority)
 
 const fromBackup = await input({ message: 'Use backup data? (y/n)', default:'y' });
 const applyChanges = await input({ message: 'Apply changes? (y/n)', default:'y' });
@@ -64,8 +65,8 @@ async function processFile(relPath:string) {
 	if(midiData.tracks.length > 1) throw new Error('Multiple Tracks discovered, this is not supported!')
 
 	let modified = false;
-	for(const fn of migratorFns) {	
-		const hasChanges = await fn(midiData, relPath);
+	for(const entry of migratorFns) {	
+		const hasChanges = await entry.fn(midiData, relPath);
 		if(hasChanges) modified = true;
 	}
 	if(!modified) return;

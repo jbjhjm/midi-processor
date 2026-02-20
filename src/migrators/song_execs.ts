@@ -12,7 +12,7 @@ type RemappingState = {
 	usedPages:UsedPageOriginInfo[],
 }
 
-
+export const priority = 5;
 export default async function (midi:MidiFile, file:string) {
 	const targetChannel = 1;
 	const track = midi.tracks[0];

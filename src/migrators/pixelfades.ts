@@ -6,6 +6,7 @@ interface RemapState {
 	count:number
 }
 
+export const priority = -5;
 export default async function (midi:MidiFile, file:string) {
 	
 	const mapperCh15 = new Remapper(15);
