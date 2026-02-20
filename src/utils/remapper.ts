@@ -1,6 +1,6 @@
 import { AnyEvent, ChannelEvent, MidiFile, NoteOffEvent, NoteOnEvent } from 'midifile-ts';
 import { channelNoteIndex } from './matchers.js';
-import { getDeltaTimeBetween, insertMidiEvent, insertNoteWithLength, isMidiNote, markEvent } from './midi.js';
+import { getDeltaTimeBetween, insertMidiEvent, insertNoteWithLength, isMidiNote } from './midi.js';
 import color from 'ansi-colors';
 
 export type RemappingEntry<TData=any> = [number, number, TData?];
@@ -57,7 +57,6 @@ export class Remapper<TRemappingData> {
 			set.add(event)
 			this.markings.set(type, set)
 		}
-		markEvent(event,type)
 	}
 
 	isEventMarked(event:AnyEvent|ChannelEvent<any>, type:string):boolean {
@@ -160,12 +159,16 @@ export class Remapper<TRemappingData> {
 						skipNext:()=>{ advanceIndex++ },
 						insertRelativeEvent:(newEvent,offset)=>{
 							insertMidiEvent(track, newEvent as any, i, offset);
+							this.markEvent(newEvent, 'generated')
 							this.changeList.push(newEvent as any)
 							if(offset <= 0) advanceIndex++
 						},
-						insertRelativeNoteWithLength:(newEvent,offset,lengthInTicks)=>{
-							insertNoteWithLength(track, newEvent as any, i, offset,lengthInTicks)
-							this.changeList.push(newEvent as any, newEvent as any)
+						insertRelativeNoteWithLength:(start:NoteOnEvent,offset,lengthInTicks)=>{
+							const end = {...start, subtype:'noteOff'} as NoteOffEvent;
+							insertNoteWithLength(track, start, end, i, offset,lengthInTicks)
+							this.markEvent(start, 'generated')
+							this.markEvent(end, 'generated')
+							this.changeList.push(start as any, start as any)
 							if(offset <= 0) advanceIndex++
 						},
 						findEvent:(matcher:(event:AnyEvent)=>boolean, start=i+1):MatchedEvent|null=>{
@@ -219,6 +222,7 @@ export class Remapper<TRemappingData> {
 
 	reset(resetChangeList=false) {
 		this.mappings.clear();
+		this.markings.clear();
 		if(resetChangeList) this.changeList = [];
 	}
 

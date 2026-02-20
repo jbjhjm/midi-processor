@@ -9,10 +9,10 @@ interface RemapState {
 export default async function (midi:MidiFile, file:string) {
 	
 	const mapperCh15 = new Remapper(15);
-	// mic segment fadeouts
+	// jbmh fast fadeouts
 	mapperCh15.batchRemap({
 		fromRange:[90, 93], 
-		target:{channel:globals.channels.jbmh, start:100}, 
+		target:{channel:globals.channels.jbmh, start:97}, 
 	})
 
 	const mapperCh16 = new Remapper(16);
@@ -21,7 +21,8 @@ export default async function (midi:MidiFile, file:string) {
 		fromRange:[60, 71], 
 		target:{channel:globals.channels.suns, start:81}, 
 	})
-	// jbmh fast fadeout
+
+	// mic segment fadeouts
 	mapperCh16.batchRemap({
 		fromRange:[72, 75], 
 		target:{channel:globals.channels.mic, start:61}, 

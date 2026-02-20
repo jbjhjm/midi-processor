@@ -7,7 +7,7 @@ export function isMidiNote(event:AnyEvent): event is NoteOnEvent|NoteOffEvent {
 	return false;
 }
 
-export function insertNoteWithLength(track:AnyEvent[], event:NoteOnEvent, refIndex:number, startTicks:number, noteLengthTicks:number) {
+export function insertNoteWithLength(track:AnyEvent[], start:NoteOnEvent, end:NoteOffEvent, refIndex:number, startTicks:number, noteLengthTicks:number) {
 	let noteStartIndex = refIndex;
 	if(noteLengthTicks===0) throw new Error('noteLengthTicks must not be 0!')
 	// console.log(`\n>>> requested to store a note at index ${refIndex} with tick info [${startTicks}, ${noteLengthTicks}].`)
@@ -31,12 +31,12 @@ export function insertNoteWithLength(track:AnyEvent[], event:NoteOnEvent, refInd
 	const ticksBetweenWrappingItems = getTicksBetween(track, startPosition.targetIndex -2, endPosition.targetIndex + 1);
 	// logDeltaTimesInRange(startPosition.targetIndex-2, endPosition.targetIndex+3, track, [refIndex]);
 
-	addMidiEvent(track, {...event, subtype:'noteOff'}, endPosition);
+	addMidiEvent(track, end, endPosition);
 	
 	// console.log(`inserted end at ${endPosition.targetIndex} and deltaTime of ${endPosition.ticksAfterTarget}`)
 	// logDeltaTimesInRange(startPosition.targetIndex-2, endPosition.targetIndex+3, track, [refIndex]);
 
-	addMidiEvent(track, {...event, subtype:'noteOn'}, startPosition);
+	addMidiEvent(track, start, startPosition);
 
 	// console.log(`inserted start at index ${startPosition.targetIndex} and deltaTime of ${startPosition.ticksAfterTarget}`)
 	// const refIndexUpdated = refIndex > startPosition.targetIndex ? refIndex +1 : refIndex;
@@ -56,15 +56,6 @@ export function insertMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>,
 	addMidiEvent(track, eventData, position);
 }
 
-const markings = new Map<string, Set<AnyEvent|ChannelEvent<any>>>();
-
-export function markEvent(event:AnyEvent|ChannelEvent<any>, type:string) {
-	event["__"+type] = true
-}
-
-export function isEventMarked(event:AnyEvent|ChannelEvent<any>, type:string):boolean {
-	return !!event["__"+type]
-}
 
 function addMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>, pos:InsertPositionInfo) {
 	
@@ -72,7 +63,6 @@ function addMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>, pos:Inser
 		...eventData,
 		deltaTime: pos.ticksAfterTarget,
 	};
-	markEvent(event, 'generated')
 	if(pos.prepend) {
 		event.deltaTime = 0;
 		track.unshift(event as AnyEvent);

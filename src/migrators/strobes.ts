@@ -1,8 +1,6 @@
 import color from 'ansi-colors';
 import type { AnyEvent, MidiFile, NoteOffEvent, NoteOnEvent } from "midifile-ts";
-import { channelNoteIndex as index } from '../utils/matchers.js';
 import { globals } from '../globals.js';
-import { insertNoteWithLength, isMidiNote } from '../utils/midi.js';
 import { Remapper, RemappingHandlerFn } from '../utils/remapper.js';
 
 type RemappingData = {white?:boolean, mult:number};
@@ -105,7 +103,6 @@ const handler:RemappingHandlerFn<RemappingData, RemappingState> = (track,event,i
 			// console.log('inserting a multiplier 50 ticks before current event')
 			const event = buildStrobeSpeedEvent(useMultiplier);
 			tools.insertRelativeNoteWithLength(event, -50, 900)
-			insertNoteWithLength(track, event, index, -50, 900)
 			s.multiplier = useMultiplier;
 		}
 	}

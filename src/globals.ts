@@ -7,8 +7,8 @@ export const globals = {
 		sfx:6,
 	},
 	path:'F:\\Sector Live\\Projects\\Audio\\recorded',
-	// glob:'**/Incompetence MIDI GrandMA.mid',
-	glob:'**/*GrandMA*.mid',
+	// glob:'**/Fake MIDI GrandMA.mid',
+	glob:'**/*GrandMA.mid',
 	renameOutputFile: (name:string /* only name, extension will be auto-appended */) => {
 		return name + ' OSC'
 	}

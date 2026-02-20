@@ -15,7 +15,9 @@ type RemappingState = {
 
 export default async function (midi:MidiFile, file:string) {
 	const targetChannel = 1;
-	const mapper = new Remapper<RemappingData>(1);
+	const track = midi.tracks[0];
+	
+	let mapper = new Remapper<RemappingData>(1);
 
 	// main cue triggers with page mapping attached
 	mapper.remap(4	, targetChannel, 11, {page:35});	//MAS Main
@@ -59,6 +61,7 @@ export default async function (midi:MidiFile, file:string) {
 	mapper.remap(80	, targetChannel, 12, {page:26});	//Burning 1 Orange
 	mapper.remap(81	, targetChannel, 13, {page:26});	//Burning 2 SS Chase
 	mapper.remap(82	, targetChannel, 14, {page:26});	//Burning 3 White Beam
+	mapper.remap(83	, targetChannel, 15, {page:26});	//Burning 3 SS Slow chase (von Echoes)
 	mapper.remap(89	, targetChannel, 12, {page:27});	//Incompetence 1 JB Slow Flash
 	mapper.remap(96	, targetChannel, 12, {page:28});	//Wrong Way 1 SS RNDM
 	mapper.remap(97	, targetChannel, 13, {page:28});	//Wrong Way 2 JB Phase
@@ -75,11 +78,9 @@ export default async function (midi:MidiFile, file:string) {
 	mapperCh2.remap(1, targetChannel, 12, {page:32});	//Fake 1 rndm blue
 	mapperCh2.remap(2, targetChannel, 13, {page:32});	//Fake 2 ss slow
 	mapperCh2.remap(3, targetChannel, 14, {page:32});	//Fake 3 ss rndm (von wrong way)
-	
-	const track = midi.tracks[0];
 
-	let state: RemappingState;
-	state = mapper.apply<RemappingState>(track, handler, {file, usedPages:[]})
+	let state: RemappingState = {file, usedPages:[]};
+	state = mapper.apply<RemappingState>(track, handler, state)
 	state = mapperCh2.apply<RemappingState>(track, handler, state)
 	finalize(track,state)
 
