@@ -5,6 +5,7 @@
 		"migrate": "tsx src/migrate.ts",
 		"scanner": "tsx src/scanner.ts",
 		"backup": "tsx src/backup.ts",
+		"copy_rename": "tsx src/copy_rename.ts",
 		"buildma2remotes": "tsx src/buildma2remotes.ts",
 		"restore": "tsx src/restore.ts"
 	},
