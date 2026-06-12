@@ -22,13 +22,13 @@ const table = lines.map(line=>{
 let colMapping: {ch, note, remoteType, remoteId};
 if(table[1].includes('Note')) {
 	// headlines
-	if(table[1][3] == 'Channel'
-	  && table[1][4] == 'Note'
-	  && table[1][5] == 'Remote Type'
-	  && table[1][6] == 'Remote ID'
+	if(table[1][4] == 'Ch#'
+	  && table[1][5] == 'Note'
+	  && table[1][6] == 'Remote Type'
+	  && table[1][7] == 'Remote ID'
 	) {
 		colMapping = {
-			ch:3, note:4, remoteType:5, remoteId:6
+			ch:4, note:5, remoteType:6, remoteId:7
 		}
 	} else {
 		throw new Error('table columns have changed, must fix code')
@@ -71,6 +71,10 @@ for(const entry of parsed) {
 	} else if(entry.remoteType === 'page') {
 		attributes.type = 'macro_line';
 		const cmd = 'Page '+entry.remoteId;
+		content = `<macro_line>${cmd}</macro_line>`;
+	} else if(entry.remoteType === 'cmd') {
+		attributes.type = 'macro_line';
+		const cmd = entry.remoteId;
 		content = `<macro_line>${cmd}</macro_line>`;
 	} else if(entry.remoteType === 'OSC') {
 		continue;
