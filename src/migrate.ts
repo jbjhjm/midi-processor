@@ -75,12 +75,16 @@ async function processFile(relPath:string) {
 		const hasChanges = await entry.fn(midiData, relPath);
 		if(hasChanges) modified = true;
 	}
-	if(!modified) return;
+	if(!modified) {
+		console.log('no changes in '+fullPath)
+		return;
+	}
 
 	// const diff = midiData.tracks.length - initialLength;
 	// console.log(diff+' MIDI events have been added.')
 
 	if(applyChanges==='y') {
+		console.log('(writing data to '+fullPath)
 		const fileBuffer = await midi.write(midiData.tracks, midiData.header.ticksPerBeat);
 		await writeFile(fileBuffer, fullPath, true)
 	} else {
