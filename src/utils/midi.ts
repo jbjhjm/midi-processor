@@ -67,7 +67,9 @@ function addMidiEvent(track: AnyEvent[], eventData: ChannelEvent<any>, pos:Inser
 		event.deltaTime = 0;
 		track.unshift(event as AnyEvent);
 	} else if(track[pos.targetIndex + 1]) {
-		if(track[pos.targetIndex + 1].deltaTime < pos.ticksAfterTarget) throw new Error('not allowed. Use insertMidiEvent')
+		if(track[pos.targetIndex + 1].deltaTime < pos.ticksAfterTarget) {
+			throw new Error('addMidiEvent failed - requested position conflicts with next event.')
+		}
 		track[pos.targetIndex + 1].deltaTime -= pos.ticksAfterTarget;
 		track.splice(pos.targetIndex + 1, 0, event as AnyEvent);
 	} else {
@@ -181,7 +183,7 @@ function findInsertPosition(track: AnyEvent[], startIndex: number, ticks: number
 		}
 		if(check !== Math.abs(ticks)) {
 			console.log({startIndex,ticks,targetIndex, advancedTicks,prepend,between,ticksRemaining,refEvent:track[startIndex]})
-			throw new Error('This seems off. getTicksBetween calculated tick count of '+check+', which is more than requested tick count '+ticks)
+			console.warn('findInsertPosition failed: getTicksBetween calculated tick count of '+check+', but requested tick offset was '+ticks+'!')
 		}
 	}
 
